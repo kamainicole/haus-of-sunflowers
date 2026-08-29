@@ -12,7 +12,7 @@ export default function LoginPage() {
     e.preventDefault();
     const { error } = await supabase.auth.signInWithOtp({
       email,
-      options: { emailRedirectTo: `${window.location.origin}/dashboard` },
+      options: { emailRedirectTo: `${window.location.origin}/auth/callback` },emailRedirectTo: \
     });
     setStatus(error ? "error" : "sent");
   }
@@ -38,3 +38,4 @@ export default function LoginPage() {
     </main>
   );
 }
+fix login redirect
