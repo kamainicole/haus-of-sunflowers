@@ -1,0 +1,84 @@
+:root {
+  --color-bg: #faf6ef;
+  --color-ink: #2b2420;
+  --color-accent: #a35c2f;
+  --color-line: #ded2bd;
+  font-family: Georgia, "Iowan Old Style", serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: var(--color-bg);
+  color: var(--color-ink);
+}
+
+a {
+  color: var(--color-accent);
+}
+
+.container {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 3rem 1.5rem;
+}
+
+.card {
+  border: 1px solid var(--color-line);
+  border-radius: 4px;
+  padding: 1.5rem;
+  background: #fff;
+}
+
+.stat-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
+.stat {
+  border: 1px solid var(--color-line);
+  border-radius: 4px;
+  padding: 1rem;
+  background: #fff;
+}
+
+.stat-number {
+  font-size: 1.75rem;
+  font-weight: bold;
+}
+
+.stat-label {
+  font-size: 0.85rem;
+  color: #6b5f52;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+input, textarea, button {
+  font-family: inherit;
+  font-size: 1rem;
+}
+
+button {
+  background: var(--color-accent);
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  padding: 0.6rem 1.2rem;
+  cursor: pointer;
+}
+
+.field {
+  display: block;
+  width: 100%;
+  padding: 0.5rem;
+  margin-top: 0.25rem;
+  margin-bottom: 1rem;
+  border: 1px solid var(--color-line);
+  border-radius: 4px;
+}

@@ -1,0 +1,14 @@
+{
+  "name": "haus-of-sunflowers",
+  "private": true,
+  "version": "0.1.0",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "db:migrate": "supabase db push",
+    "db:reset": "supabase db reset",
+    "dev": "npm run dev --workspace=apps/web"
+  }
+}

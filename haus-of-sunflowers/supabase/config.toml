@@ -1,0 +1,20 @@
+project_id = "haus-of-sunflowers"
+
+[db]
+port = 54322
+major_version = 15
+
+[api]
+enabled = true
+port = 54321
+schemas = ["api", "research"]
+extra_search_path = ["public"]
+# Note: "dissertation" and "internal" are intentionally NOT listed
+# here. Supabase's Data API only exposes schemas listed in this
+# array — this is the config-level twin of the revoke statements
+# in packages/database/migrations/006_grants.sql. Both must agree.
+max_rows = 1000
+
+[auth]
+enabled = true
+site_url = "http://localhost:3000"
