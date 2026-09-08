@@ -1,6 +1,6 @@
 "use client";
 
-import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
+import { CircleMarker, MapContainer, Popup, TileLayer } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import { getTileConfig } from "@/config/mapTiles";
 import type { MapLocation } from "@haus/shared-types";
@@ -12,14 +12,15 @@ interface ResearchMapProps {
 }
 
 /**
- * Renders map_locations from research.map_locations. Note that
- * location_precision (exact / approximate / county_level / etc) is
- * shown in the popup deliberately — the map never implies more
- * precision than the underlying historical record actually supports.
+ * Renders map_locations from research.map_locations.
+ * CircleMarker is used instead of Leaflet's default image-based Marker so
+ * pins do not disappear when bundled marker-icon assets are unavailable.
+ * location_precision is shown in the popup so the map never implies more
+ * certainty than the underlying historical record supports.
  */
 export default function ResearchMap({
   locations,
-  center = [32.3, -90.2], // rough Mississippi-ish default; adjust per your data's center of gravity
+  center = [32.3, -90.2],
   zoom = 6,
 }: ResearchMapProps) {
   const tile = getTileConfig();
@@ -32,7 +33,12 @@ export default function ResearchMap({
     <MapContainer center={center} zoom={zoom} style={{ height: "600px", width: "100%" }}>
       <TileLayer url={tile.url} attribution={tile.attribution} maxZoom={tile.maxZoom} />
       {plottable.map((loc) => (
-        <Marker key={loc.id} position={[loc.latitude!, loc.longitude!]}>
+        <CircleMarker
+          key={loc.id}
+          center={[loc.latitude!, loc.longitude!]}
+          radius={7}
+          pathOptions={{ weight: 2, fillOpacity: 0.85 }}
+        >
           <Popup>
             <strong>{loc.location_name}</strong>
             <br />
@@ -44,7 +50,7 @@ export default function ResearchMap({
               </>
             )}
           </Popup>
-        </Marker>
+        </CircleMarker>
       ))}
     </MapContainer>
   );
