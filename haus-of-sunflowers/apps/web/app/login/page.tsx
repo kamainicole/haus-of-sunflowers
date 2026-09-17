@@ -3,15 +3,27 @@
 import { useState } from "react";
 import { createClient } from "@/lib/supabase/client";
 
+type LoginStatus = "idle" | "sent" | "error" | "preview";
+
 export default function LoginPage() {
   const [email, setEmail] = useState("");
-  const [status, setStatus] = useState<"idle" | "sent" | "error">("idle");
-  const supabase = createClient();
+  const [status, setStatus] = useState<LoginStatus>("idle");
+
+  const hasSupabaseConfig = Boolean(
+    process.env.NEXT_PUBLIC_SUPABASE_URL &&
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+  );
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setStatus("idle");
 
+    if (!hasSupabaseConfig) {
+      setStatus("preview");
+      return;
+    }
+
+    const supabase = createClient();
     const { error } = await supabase.auth.signInWithOtp({
       email,
       options: {
@@ -76,6 +88,11 @@ export default function LoginPage() {
           )}
           {status === "error" && (
             <p className="status-message error">Something went wrong. Please try again.</p>
+          )}
+          {status === "preview" && (
+            <p className="status-message">
+              This preview does not have Supabase environment variables attached. The branded interface is available for review, but sign-in only works on the configured production deployment.
+            </p>
           )}
         </div>
       </section>
