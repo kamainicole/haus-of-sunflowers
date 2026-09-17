@@ -14,18 +14,31 @@ const PRIMARY_STATS: Array<{ key: keyof DashboardStats; label: string; kicker: s
 ];
 
 export default async function DashboardPage() {
-  const supabase = createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  const hasSupabaseConfig = Boolean(
+    process.env.NEXT_PUBLIC_SUPABASE_URL &&
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+  );
 
-  if (!user) redirect("/login");
+  let stats: DashboardStats | null = null;
+  let errorMessage: string | null = null;
 
-  const { data: stats, error } = await supabase
-    .schema("api")
-    .from("dashboard_stats")
-    .select("*")
-    .single<DashboardStats>();
+  if (hasSupabaseConfig) {
+    const supabase = createClient();
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+
+    if (!user) redirect("/login");
+
+    const { data, error } = await supabase
+      .schema("api")
+      .from("dashboard_stats")
+      .select("*")
+      .single<DashboardStats>();
+
+    stats = data;
+    errorMessage = error?.message ?? null;
+  }
 
   return (
     <main className="archive-page">
@@ -58,9 +71,7 @@ export default async function DashboardPage() {
 
       <section className="archive-main">
         <header className="topbar">
-          <div>
-            <div className="eyebrow">People · Places · Practices · Possibilities</div>
-          </div>
+          <div className="eyebrow">People · Places · Practices · Possibilities</div>
           <div className="top-search" aria-label="Archive search preview">Search the archive…</div>
         </header>
 
@@ -83,77 +94,79 @@ export default async function DashboardPage() {
           </aside>
         </section>
 
-        {error && (
+        {!hasSupabaseConfig && (
           <p className="alert">
-            Dashboard statistics are temporarily unavailable. {error.message}
+            Preview mode: the interface is available for visual review, but this preview deployment is not connected to Supabase. Production data and sign-in remain unchanged.
           </p>
         )}
 
-        {stats && (
-          <>
-            <section className="stat-grid" aria-label="Archive statistics">
-              {PRIMARY_STATS.map(({ key, label, kicker }) => (
-                <article className="stat-card" key={key}>
-                  <div className="stat-kicker">{kicker}</div>
-                  <div className="stat-number">{stats[key]}</div>
-                  <div className="stat-label">{label}</div>
-                </article>
-              ))}
-            </section>
-
-            <section className="content-grid">
-              <article className="panel">
-                <div className="eyebrow">Workspace</div>
-                <h2>Continue the research</h2>
-                <div className="quick-grid">
-                  <div className="quick-action">
-                    <strong>Import documents</strong>
-                    <span>Bring source material into the review pipeline.</span>
-                  </div>
-                  <div className="quick-action">
-                    <strong>Review map evidence</strong>
-                    <span>Trace where practices, people, and materials are documented.</span>
-                  </div>
-                  <div className="quick-action">
-                    <strong>Develop claims</strong>
-                    <span>Separate evidence, interpretation, and open questions.</span>
-                  </div>
-                  <div className="quick-action">
-                    <strong>Dissertation workspace</strong>
-                    <span>Keep private academic work separate from archive publication.</span>
-                  </div>
-                </div>
-              </article>
-
-              <aside className="panel">
-                <div className="eyebrow">Research pulse</div>
-                <h2>Archive status</h2>
-                <div className="detail-list">
-                  <div className="detail-row">
-                    <span>Claims needing verification</span>
-                    <strong>{stats.claims_needing_verification}</strong>
-                  </div>
-                  <div className="detail-row">
-                    <span>Cited claim links</span>
-                    <strong>{stats.cited_claim_links}</strong>
-                  </div>
-                  <div className="detail-row">
-                    <span>Private materials</span>
-                    <strong>{stats.private_records_materials}</strong>
-                  </div>
-                  <div className="detail-row">
-                    <span>Published materials</span>
-                    <strong>{stats.published_records_materials}</strong>
-                  </div>
-                  <div className="detail-row">
-                    <span>Dissertation notes</span>
-                    <strong>{stats.total_dissertation_notes}</strong>
-                  </div>
-                </div>
-              </aside>
-            </section>
-          </>
+        {errorMessage && (
+          <p className="alert">
+            Dashboard statistics are temporarily unavailable. {errorMessage}
+          </p>
         )}
+
+        <section className="stat-grid" aria-label="Archive statistics">
+          {PRIMARY_STATS.map(({ key, label, kicker }) => (
+            <article className="stat-card" key={key}>
+              <div className="stat-kicker">{kicker}</div>
+              <div className="stat-number">{stats ? stats[key] : "—"}</div>
+              <div className="stat-label">{label}</div>
+            </article>
+          ))}
+        </section>
+
+        <section className="content-grid">
+          <article className="panel">
+            <div className="eyebrow">Workspace</div>
+            <h2>Continue the research</h2>
+            <div className="quick-grid">
+              <div className="quick-action">
+                <strong>Import documents</strong>
+                <span>Bring source material into the review pipeline.</span>
+              </div>
+              <div className="quick-action">
+                <strong>Review map evidence</strong>
+                <span>Trace where practices, people, and materials are documented.</span>
+              </div>
+              <div className="quick-action">
+                <strong>Develop claims</strong>
+                <span>Separate evidence, interpretation, and open questions.</span>
+              </div>
+              <div className="quick-action">
+                <strong>Dissertation workspace</strong>
+                <span>Keep private academic work separate from archive publication.</span>
+              </div>
+            </div>
+          </article>
+
+          <aside className="panel">
+            <div className="eyebrow">Research pulse</div>
+            <h2>Archive status</h2>
+            <div className="detail-list">
+              <div className="detail-row">
+                <span>Claims needing verification</span>
+                <strong>{stats ? stats.claims_needing_verification : "—"}</strong>
+              </div>
+              <div className="detail-row">
+                <span>Cited claim links</span>
+                <strong>{stats ? stats.cited_claim_links : "—"}</strong>
+              </div>
+              <div className="detail-row">
+                <span>Private materials</span>
+                <strong>{stats ? stats.private_records_materials : "—"}</strong>
+              </div>
+              <div className="detail-row">
+                <span>Published materials</span>
+                <strong>{stats ? stats.published_records_materials : "—"}</strong>
+              </div>
+              <div className="detail-row">
+                <span>Dissertation notes</span>
+                <strong>{stats ? stats.total_dissertation_notes : "—"}</strong>
+              </div>
+            </div>
+          </aside>
+        </section>
       </section>
     </main>
   );
