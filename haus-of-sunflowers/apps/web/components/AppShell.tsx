@@ -11,13 +11,17 @@ const NAV = [
   { href: "/formulas", label: "Formula Builder", glyph: "◇" },
   { href: "/sources", label: "Sources", glyph: "▤" },
   { href: "/historical-map", label: "Historical Map", glyph: "◎" },
-  { href: "/import-center", label: "Import Center", glyph: "⇧" },
   { href: "/research", label: "Historical Research", glyph: "⌕" },
+];
+
+const OWNER_NAV = [
+  { href: "/import-center", label: "Import Center", glyph: "⇧" },
   { href: "/dissertation", label: "Dissertation", glyph: "□" },
 ];
 
-export function AppShell({ children }: { children: ReactNode }) {
+export function AppShell({ children, isOwner = false }: { children: ReactNode; isOwner?: boolean }) {
   const pathname = usePathname();
+  const navItems = isOwner ? [...NAV, ...OWNER_NAV] : NAV;
 
   return (
     <main className="product-shell">
@@ -34,7 +38,7 @@ export function AppShell({ children }: { children: ReactNode }) {
 
         <div className="sidebar-section-label">Workspace</div>
         <nav className="product-nav" aria-label="Primary navigation">
-          {NAV.map((item) => {
+          {navItems.map((item) => {
             const active =
               pathname === item.href ||
               (item.href !== "/dashboard" && pathname?.startsWith(item.href + "/"));
@@ -62,7 +66,7 @@ export function AppShell({ children }: { children: ReactNode }) {
 
         <div className="sidebar-footer">
           <span className="status-dot" />
-          Private research workspace
+          {isOwner ? "Owner research workspace" : "Member formulary access"}
         </div>
       </aside>
 
@@ -72,10 +76,14 @@ export function AppShell({ children }: { children: ReactNode }) {
             <div className="topbar-kicker">Haus of Sunflowers Research Archive</div>
             <div className="topbar-title">Formulate with purpose. Research with evidence.</div>
           </div>
-          <Link href="/import-center" className="topbar-action">
-            <span aria-hidden="true">＋</span>
-            Import Book / Source
-          </Link>
+          {isOwner ? (
+            <Link href="/import-center" className="topbar-action">
+              <span aria-hidden="true">＋</span>
+              Import Book / Source
+            </Link>
+          ) : (
+            <span className="topbar-kicker">Member View</span>
+          )}
         </header>
 
         <div className="product-content">{children}</div>
