@@ -1,11 +1,17 @@
+import { redirect } from "next/navigation";
 import { AppShell } from "@/components/AppShell";
+import { requireOwner } from "@/lib/auth/isOwner";
 
-export default function DissertationPage() {
+export default async function DissertationPage() {
+  const { user, isOwner } = await requireOwner();
+  if (!user) redirect("/login");
+  if (!isOwner) redirect("/dashboard");
+
   return (
-    <AppShell>
+    <AppShell isOwner>
       <section className="page-hero dissertation-hero">
         <div>
-          <div className="eyebrow">Private by design</div>
+          <div className="eyebrow">Owner only · Private by design</div>
           <h1>Dissertation Workspace</h1>
           <p>
             Academic notes, chapters, claims, and source links remain structurally separate
