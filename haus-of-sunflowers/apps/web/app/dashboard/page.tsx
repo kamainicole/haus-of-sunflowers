@@ -2,6 +2,7 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { AppShell } from "@/components/AppShell";
 import { createClient } from "@/lib/supabase/server";
+import { requireOwner } from "@/lib/auth/isOwner";
 import type { DashboardStats } from "@haus/shared-types";
 
 const PRIMARY_STATS: Array<{ key: keyof DashboardStats; label: string; kicker: string }> = [
@@ -19,11 +20,15 @@ export default async function DashboardPage() {
 
   let stats: DashboardStats | null = null;
   let errorMessage: string | null = null;
+  let isOwner = false;
 
   if (configured) {
     const supabase = createClient();
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) redirect("/login");
+
+    const ownerState = await requireOwner();
+    isOwner = ownerState.isOwner;
 
     const { data, error } = await supabase
       .schema("api")
@@ -36,7 +41,7 @@ export default async function DashboardPage() {
   }
 
   return (
-    <AppShell>
+    <AppShell isOwner={isOwner}>
       <section className="page-hero dashboard-product-hero">
         <div>
           <div className="eyebrow">The Rootworker&apos;s Formulary · Extended</div>
@@ -48,7 +53,7 @@ export default async function DashboardPage() {
           </p>
           <div className="hero-actions">
             <Link className="primary-cta" href="/formulary">Enter the Formulary</Link>
-            <Link className="secondary-cta" href="/import-center">Import the Book</Link>
+            {isOwner && <Link className="secondary-cta" href="/import-center">Import the Book</Link>}
           </div>
         </div>
         <aside className="dashboard-feature-card">
@@ -89,12 +94,14 @@ export default async function DashboardPage() {
           <Link href="/formulas">Build a formula →</Link>
         </article>
 
-        <article className="dashboard-work-card">
-          <div className="eyebrow">Ingest</div>
-          <h2>Import Center</h2>
-          <p>Upload the book and research sources once. Keep source, page, and evidence attached to what gets extracted.</p>
-          <Link href="/import-center">Open imports →</Link>
-        </article>
+        {isOwner && (
+          <article className="dashboard-work-card">
+            <div className="eyebrow">Owner tools</div>
+            <h2>Import Center</h2>
+            <p>Upload books and research sources, review proposed records, and publish approved material.</p>
+            <Link href="/import-center">Open private imports →</Link>
+          </article>
+        )}
 
         <article className="dashboard-work-card research-card">
           <div className="eyebrow">Bonus layer</div>
@@ -102,6 +109,15 @@ export default async function DashboardPage() {
           <p>Follow archival evidence, people, places, regional patterns, and unresolved questions without crowding the client-facing book experience.</p>
           <Link href="/research">Go deeper →</Link>
         </article>
+
+        {isOwner && (
+          <article className="dashboard-work-card">
+            <div className="eyebrow">Owner tools</div>
+            <h2>Dissertation Workspace</h2>
+            <p>Private academic notes and chapter work remain completely separate from member-facing content.</p>
+            <Link href="/dissertation">Open private dissertation →</Link>
+          </article>
+        )}
       </section>
     </AppShell>
   );

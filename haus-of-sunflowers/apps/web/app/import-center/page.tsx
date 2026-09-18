@@ -2,6 +2,7 @@ import { redirect } from "next/navigation";
 import { AppShell } from "@/components/AppShell";
 import { BookImportCard } from "@/components/BookImportCard";
 import { createClient } from "@/lib/supabase/server";
+import { requireOwner } from "@/lib/auth/isOwner";
 
 type Batch = {
   id: string;
@@ -17,26 +18,27 @@ export default async function ImportCenterPage() {
       process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
   );
 
-  let batches: Batch[] = [];
-
-  if (configured) {
-    const supabase = createClient();
-    const { data: { user } } = await supabase.auth.getUser();
-    if (!user) redirect("/login");
-
-    const { data } = await supabase.schema("api").rpc("import_list_batches");
-    batches = (data ?? []) as Batch[];
+  if (!configured) {
+    redirect("/dashboard");
   }
 
+  const { user, isOwner } = await requireOwner();
+  if (!user) redirect("/login");
+  if (!isOwner) redirect("/dashboard");
+
+  const supabase = createClient();
+  const { data } = await supabase.schema("api").rpc("import_list_batches");
+  const batches = (data ?? []) as Batch[];
+
   return (
-    <AppShell>
+    <AppShell isOwner>
       <section className="page-hero compact-hero">
         <div>
-          <div className="eyebrow">Source ingestion</div>
+          <div className="eyebrow">Owner tools · Source ingestion</div>
           <h1>Import Center</h1>
           <p>
-            Upload the book or a historical source once. The system stages it, preserves
-            provenance, proposes structured records, and keeps uncertain items in review.
+            Private owner workspace for uploading books and historical sources, staging
+            extraction, reviewing proposed records, and publishing approved research.
           </p>
         </div>
       </section>
