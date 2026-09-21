@@ -9,6 +9,7 @@ const NAV = [
   { href: "/formulary", label: "Formulary", glyph: "✦" },
   { href: "/materials", label: "Materials", glyph: "◌" },
   { href: "/formulas", label: "Formula Builder", glyph: "◇" },
+  { href: "/community", label: "Study Commons", glyph: "❈" },
   { href: "/sources", label: "Sources", glyph: "▤" },
   { href: "/historical-map", label: "Historical Map", glyph: "◎" },
   { href: "/research", label: "Historical Research", glyph: "⌕" },
