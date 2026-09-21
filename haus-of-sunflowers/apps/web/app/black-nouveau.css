@@ -186,7 +186,8 @@ body {
 .panel p,
 .stat-card .stat-kicker,
 .detail-row span,
-.quick-action span {
+.quick-action span,
+.research-menu span {
   color: var(--bn-parchment) !important;
 }
 
@@ -215,12 +216,27 @@ body {
 .material-card,
 .source-card,
 .research-card,
-.import-card {
+.import-card,
+.research-menu > * {
   background:
     linear-gradient(180deg, rgba(38, 25, 31, 0.96), rgba(26, 18, 22, 0.96)) !important;
   border-color: var(--bn-line) !important;
   color: var(--bn-ivory) !important;
   box-shadow: 0 12px 34px rgba(0, 0, 0, 0.24) !important;
+}
+
+.research-menu strong {
+  color: var(--bn-ivory) !important;
+}
+
+.research-menu > a {
+  transition: transform 160ms ease, border-color 160ms ease, box-shadow 160ms ease;
+}
+
+.research-menu > a:hover {
+  transform: translateY(-2px);
+  border-color: rgba(197, 154, 88, 0.52) !important;
+  box-shadow: 0 16px 38px rgba(0, 0, 0, 0.30) !important;
 }
 
 .stat-card:nth-child(3n + 1) {
