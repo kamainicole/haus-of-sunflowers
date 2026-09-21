@@ -44,23 +44,24 @@ export default async function DashboardPage() {
     <AppShell isOwner={isOwner}>
       <section className="page-hero dashboard-product-hero">
         <div>
-          <div className="eyebrow">The Rootworker&apos;s Formulary · Extended</div>
-          <h1>Your working formulation archive.</h1>
+          <div className="eyebrow">The Rootworker&apos;s Formulary · Living Archive</div>
+          <h1>Enter the archive. Follow what connects.</h1>
           <p>
-            Use the book as the foundation, then move outward into materials, formulas,
-            personal observations, sources, and historical evidence without losing where
-            any piece of information came from.
+            Begin with formulation, then wander outward through materials, practices, people,
+            places, sources, and historical evidence. Every path should preserve provenance while
+            still leaving room for discovery.
           </p>
           <div className="hero-actions">
             <Link className="primary-cta" href="/formulary">Enter the Formulary</Link>
-            {isOwner && <Link className="secondary-cta" href="/import-center">Import the Book</Link>}
+            <Link className="secondary-cta" href="/historical-map">Explore the Map</Link>
+            {isOwner && <Link className="secondary-cta" href="/import-center">Bring in a Source</Link>}
           </div>
         </div>
         <aside className="dashboard-feature-card">
           <div className="feature-number">01</div>
-          <span>Start here</span>
-          <strong>Condition first.</strong>
-          <p>Build from function, role, temperament, balance, and application rather than a flat list of correspondences.</p>
+          <span>Begin anywhere</span>
+          <strong>Let the archive lead you.</strong>
+          <p>Move from a material to a practice, from a source to a place, or from a question to the evidence that can actually answer it.</p>
         </aside>
       </section>
 
@@ -77,6 +78,36 @@ export default async function DashboardPage() {
             <div className="stat-label">{label}</div>
           </article>
         ))}
+      </section>
+
+      <section className="archive-discovery" aria-labelledby="discovery-title">
+        <div className="archive-discovery-header">
+          <div>
+            <div className="eyebrow">Ways into the archive</div>
+            <h2 id="discovery-title">Choose a thread and follow it.</h2>
+          </div>
+          <p>
+            This space is built for wandering with purpose. Start where your curiosity is strongest,
+            then let linked evidence move you across the archive.
+          </p>
+        </div>
+        <div className="discovery-paths">
+          <Link className="discovery-path" href="/materials">
+            <span>Botanical path</span>
+            <strong>Begin with a material</strong>
+            <p>Trace role, temperament, applications, pairings, sources, and related practices.</p>
+          </Link>
+          <Link className="discovery-path" href="/historical-map">
+            <span>Geographic path</span>
+            <strong>Begin with a place</strong>
+            <p>Explore where evidence appears and how records connect across regions and time.</p>
+          </Link>
+          <Link className="discovery-path" href="/sources">
+            <span>Source path</span>
+            <strong>Begin with the record</strong>
+            <p>Enter through books and archives, then move into the people, claims, and practices they document.</p>
+          </Link>
+        </div>
       </section>
 
       <section className="dashboard-work-grid">
@@ -98,23 +129,23 @@ export default async function DashboardPage() {
           <article className="dashboard-work-card">
             <div className="eyebrow">Owner tools</div>
             <h2>Import Center</h2>
-            <p>Upload books and research sources, review proposed records, and publish approved material.</p>
+            <p>Bring books and research sources into the archive, review proposed records, and promote only what you approve.</p>
             <Link href="/import-center">Open private imports →</Link>
           </article>
         )}
 
         <article className="dashboard-work-card research-card">
-          <div className="eyebrow">Bonus layer</div>
+          <div className="eyebrow">Deep research</div>
           <h2>Historical Research</h2>
-          <p>Follow archival evidence, people, places, regional patterns, and unresolved questions without crowding the client-facing book experience.</p>
+          <p>Follow archival evidence, people, places, regional patterns, and unresolved questions without flattening interpretation into fact.</p>
           <Link href="/research">Go deeper →</Link>
         </article>
 
         {isOwner && (
           <article className="dashboard-work-card">
-            <div className="eyebrow">Owner tools</div>
+            <div className="eyebrow">Private work</div>
             <h2>Dissertation Workspace</h2>
-            <p>Private academic notes and chapter work remain completely separate from member-facing content.</p>
+            <p>Keep academic notes, research questions, and chapter work entirely separate from member-facing content.</p>
             <Link href="/dissertation">Open private dissertation →</Link>
           </article>
         )}
