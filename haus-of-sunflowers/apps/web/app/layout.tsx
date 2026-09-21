@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import "./black-nouveau.css";
+import "./contrast-fixes.css";
 
 export const metadata: Metadata = {
   title: "Haus of Sunflowers Research Archive",
