@@ -1,0 +1,57 @@
+/* Global contrast corrections for the Black Nouveau theme.
+   Keep body copy light, but use the brand gold for headings and key card titles. */
+
+.product-shell h1,
+.product-shell h2,
+.product-shell h3,
+.product-shell h4,
+.product-shell h5,
+.product-shell h6,
+.product-shell .topbar-title,
+.product-shell .research-menu strong,
+.product-shell .quick-action strong,
+.product-shell .detail-row strong,
+.product-shell .dashboard-work-card strong,
+.product-shell .formulary-card strong,
+.product-shell .material-card strong,
+.product-shell .source-card strong,
+.product-shell .research-card strong,
+.product-shell .import-card strong {
+  color: var(--bn-gold) !important;
+}
+
+/* Keep card surfaces dark so the gold headings remain readable everywhere. */
+.product-shell .research-menu > *,
+.product-shell .quick-action,
+.product-shell .dashboard-work-card,
+.product-shell .formulary-card,
+.product-shell .material-card,
+.product-shell .source-card,
+.product-shell .research-card,
+.product-shell .import-card,
+.product-shell .panel,
+.product-shell .stat-card {
+  background: linear-gradient(180deg, rgba(38, 25, 31, 0.97), rgba(26, 18, 22, 0.97)) !important;
+  border-color: var(--bn-line) !important;
+}
+
+/* Secondary descriptive copy remains softer, but still clearly visible. */
+.product-shell .research-menu span,
+.product-shell .quick-action span,
+.product-shell .dashboard-work-card p,
+.product-shell .panel p,
+.product-shell .source-card p,
+.product-shell .material-card p,
+.product-shell .research-card p,
+.product-shell .import-card p {
+  color: var(--bn-parchment) !important;
+}
+
+/* Give linked card titles a stronger visual state without changing the palette. */
+.product-shell a:hover h1,
+.product-shell a:hover h2,
+.product-shell a:hover h3,
+.product-shell .research-menu > a:hover strong,
+.product-shell .quick-action:hover strong {
+  color: var(--bn-blush) !important;
+}
