@@ -28,6 +28,7 @@ export default function FormularyPage() {
           <div className="hero-actions">
             <Link className="primary-cta" href="/materials">Browse Materials</Link>
             <Link className="secondary-cta" href="/formulas">Open Formula Builder</Link>
+            <Link className="secondary-cta" href="/formulary/trainer">Open Formulation Lab</Link>
           </div>
         </div>
         <aside className="book-spine-card">
@@ -67,6 +68,7 @@ export default function FormularyPage() {
             A material can fill different roles in different formulas. The app stores those
             roles in context instead of pretending each ingredient has one fixed meaning.
           </p>
+          <Link className="text-link" href="/formulary/trainer">Train with the Formulation Lab →</Link>
         </article>
         <article className="feature-panel research-layer-panel">
           <div className="eyebrow">Bonus layer</div>

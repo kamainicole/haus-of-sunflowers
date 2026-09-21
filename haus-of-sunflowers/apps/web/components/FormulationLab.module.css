@@ -1,0 +1,312 @@
+.lab {
+  display: grid;
+  gap: 20px;
+}
+
+.toolbar,
+.exercise,
+.learningPath {
+  border: 1px solid rgba(197, 154, 88, 0.28);
+  border-radius: 22px;
+  background: linear-gradient(180deg, rgba(38, 25, 31, 0.98), rgba(25, 17, 21, 0.98));
+  box-shadow: 0 18px 46px rgba(0, 0, 0, 0.28);
+}
+
+.toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  padding: 24px;
+}
+
+.toolbar h2,
+.exercise h3,
+.learningPath h3 {
+  margin: 6px 0 0;
+  color: #d7a6a3;
+  font-family: Georgia, "Times New Roman", serif;
+  font-weight: 500;
+}
+
+.toolbar h2 {
+  font-size: clamp(1.6rem, 3vw, 2.35rem);
+}
+
+.kicker {
+  color: #c59a58;
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.scoreCard {
+  min-width: 180px;
+  padding: 16px 18px;
+  border: 1px solid rgba(197, 154, 88, 0.24);
+  border-radius: 16px;
+  background: rgba(16, 12, 14, 0.56);
+}
+
+.scoreCard span,
+.scoreCard small {
+  display: block;
+  color: #cabaa6;
+}
+
+.scoreCard strong {
+  display: block;
+  margin: 4px 0;
+  color: #c59a58;
+  font-size: 2rem;
+}
+
+.modeRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.modeRow button {
+  border: 1px solid rgba(197, 154, 88, 0.22);
+  border-radius: 999px;
+  padding: 10px 14px;
+  background: rgba(29, 21, 25, 0.9);
+  color: #cabaa6;
+  font-weight: 700;
+}
+
+.modeRow button:hover,
+.modeRow .activeMode {
+  border-color: rgba(197, 154, 88, 0.62);
+  background: rgba(75, 41, 60, 0.82);
+  color: #f1e7d6;
+}
+
+.exercise {
+  padding: 28px;
+}
+
+.exerciseMeta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 14px;
+}
+
+.exerciseMeta span {
+  padding: 6px 9px;
+  border-radius: 999px;
+  background: rgba(89, 96, 74, 0.24);
+  color: #f1e7d6;
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.exercise h3 {
+  font-size: clamp(1.8rem, 4vw, 2.7rem);
+}
+
+.prompt {
+  max-width: 900px;
+  margin: 12px 0 0;
+  color: #cabaa6;
+  font-size: 1.03rem;
+  line-height: 1.7;
+}
+
+.formulaReadout {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  margin: 22px 0;
+}
+
+.formulaReadout > div {
+  padding: 16px;
+  border: 1px solid rgba(241, 231, 214, 0.09);
+  border-radius: 14px;
+  background: rgba(16, 12, 14, 0.54);
+}
+
+.formulaReadout span,
+.formulaReadout strong {
+  display: block;
+}
+
+.formulaReadout span {
+  color: #9a7545;
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.formulaReadout strong {
+  margin-top: 5px;
+  color: #f1e7d6;
+}
+
+.options {
+  display: grid;
+  gap: 12px;
+  margin-top: 22px;
+}
+
+.option {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  width: 100%;
+  padding: 17px 18px;
+  border: 1px solid rgba(197, 154, 88, 0.22);
+  border-radius: 14px;
+  background: rgba(16, 12, 14, 0.66);
+  color: #f1e7d6;
+  text-align: left;
+  transition: transform 150ms ease, border-color 150ms ease, background 150ms ease;
+}
+
+.option:hover {
+  transform: translateY(-1px);
+  border-color: rgba(197, 154, 88, 0.55);
+}
+
+.option span {
+  color: #cabaa6;
+  font-size: 0.8rem;
+}
+
+.selectedOption {
+  border-color: rgba(183, 123, 130, 0.75);
+  background: rgba(75, 41, 60, 0.72);
+}
+
+.bestOption {
+  box-shadow: inset 4px 0 0 #c59a58;
+}
+
+.feedback {
+  margin-top: 20px;
+  padding: 20px;
+  border: 1px solid rgba(197, 154, 88, 0.28);
+  border-radius: 16px;
+  background: linear-gradient(145deg, rgba(89, 96, 74, 0.16), rgba(29, 21, 25, 0.8));
+}
+
+.feedbackHeader span,
+.feedbackHeader strong {
+  display: block;
+}
+
+.feedbackHeader span {
+  color: #c59a58;
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+}
+
+.feedbackHeader strong {
+  margin-top: 4px;
+  color: #d7a6a3;
+  font-size: 1.2rem;
+}
+
+.feedback p,
+.teachingNote {
+  color: #cabaa6;
+  line-height: 1.65;
+}
+
+.teachingNote {
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid rgba(241, 231, 214, 0.09);
+}
+
+.teachingNote strong {
+  color: #f1e7d6;
+}
+
+.nextButton {
+  margin-top: 16px;
+  border: 1px solid #d8b67f;
+  border-radius: 12px;
+  padding: 11px 14px;
+  background: linear-gradient(180deg, #d0aa70, #c59a58);
+  color: #1a1114;
+  font-weight: 800;
+}
+
+.learningPath {
+  padding: 24px;
+}
+
+.learningPath h3 {
+  font-size: 1.7rem;
+}
+
+.pathGrid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+  margin-top: 18px;
+}
+
+.pathGrid article {
+  padding: 16px;
+  border: 1px solid rgba(197, 154, 88, 0.18);
+  border-radius: 14px;
+  background: rgba(16, 12, 14, 0.5);
+}
+
+.pathGrid strong,
+.pathGrid span {
+  display: block;
+}
+
+.pathGrid strong {
+  color: #d7a6a3;
+}
+
+.pathGrid span {
+  margin-top: 7px;
+  color: #cabaa6;
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+@media (max-width: 860px) {
+  .toolbar {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .formulaReadout,
+  .pathGrid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (max-width: 560px) {
+  .formulaReadout,
+  .pathGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .exercise,
+  .toolbar,
+  .learningPath {
+    padding: 20px;
+  }
+
+  .option {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+}
