@@ -37,7 +37,7 @@ export function AppShell({ children, isOwner = false }: { children: ReactNode; i
           </div>
         </Link>
 
-        <div className="sidebar-section-label">Workspace</div>
+        <div className="sidebar-section-label">Archive paths</div>
         <nav className="product-nav" aria-label="Primary navigation">
           {navItems.map((item) => {
             const active =
@@ -57,17 +57,17 @@ export function AppShell({ children, isOwner = false }: { children: ReactNode; i
         </nav>
 
         <div className="sidebar-book-card">
-          <div className="sidebar-book-kicker">Book-led archive</div>
-          <strong>Formulation first.</strong>
+          <div className="sidebar-book-kicker">Living archive</div>
+          <strong>Follow the thread.</strong>
           <p>
-            Book content is the core experience. Historical evidence lives as the deeper
-            research layer.
+            Move from formulation into people, places, sources, and historical evidence without
+            losing provenance along the way.
           </p>
         </div>
 
         <div className="sidebar-footer">
           <span className="status-dot" />
-          {isOwner ? "Owner research workspace" : "Member formulary access"}
+          {isOwner ? "Private research sanctuary" : "Member archive access"}
         </div>
       </aside>
 
@@ -75,15 +75,15 @@ export function AppShell({ children, isOwner = false }: { children: ReactNode; i
         <header className="product-topbar">
           <div>
             <div className="topbar-kicker">Haus of Sunflowers Research Archive</div>
-            <div className="topbar-title">Formulate with purpose. Research with evidence.</div>
+            <div className="topbar-title">A living archive for formulation, memory, place, and evidence.</div>
           </div>
           {isOwner ? (
             <Link href="/import-center" className="topbar-action">
               <span aria-hidden="true">＋</span>
-              Import Book / Source
+              Bring in a Source
             </Link>
           ) : (
-            <span className="topbar-kicker">Member View</span>
+            <span className="archive-stars" aria-hidden="true">✦ ✧ ✦</span>
           )}
         </header>
 
