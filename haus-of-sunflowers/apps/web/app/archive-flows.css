@@ -130,6 +130,49 @@
 .reference-flow-strip strong { color: var(--bn-ivory); font-family: Georgia, serif; font-weight: 500; }
 .reference-flow-strip > span { color: var(--bn-gold-soft); opacity: .65; }
 
+.material-learning-profile {
+  margin: 0 0 24px;
+  padding: clamp(20px, 3vw, 30px);
+  border: 1px solid rgba(209,170,104,.28);
+  border-radius: 20px;
+  background:
+    radial-gradient(circle at 92% 10%, rgba(209,170,104,.09), transparent 17rem),
+    linear-gradient(145deg, rgba(47,29,39,.78), rgba(14,9,12,.90));
+  box-shadow: 0 20px 54px rgba(0,0,0,.25);
+}
+.learning-profile-heading { max-width: 760px; margin-bottom: 18px; }
+.learning-profile-heading h2 {
+  margin: 5px 0 7px;
+  color: var(--bn-ivory);
+  font: 500 clamp(1.45rem, 2.8vw, 2.15rem)/1.15 Georgia, serif;
+}
+.learning-profile-heading p { margin: 0; color: var(--bn-parchment); line-height: 1.6; }
+.learning-profile-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+}
+.learning-profile-grid article {
+  min-height: 155px;
+  padding: 17px;
+  border: 1px solid rgba(209,170,104,.18);
+  border-radius: 14px;
+  background: rgba(10,6,8,.45);
+}
+.learning-profile-grid article > span {
+  display: inline-block;
+  margin-bottom: 20px;
+  color: var(--bn-gold);
+  font: .68rem/1 Georgia, serif;
+  letter-spacing: .1em;
+}
+.learning-profile-grid h3 {
+  margin: 0 0 8px;
+  color: var(--bn-ivory);
+  font: 500 1.08rem/1.2 Georgia, serif;
+}
+.learning-profile-grid p { margin: 0; color: var(--bn-parchment); font-size: .84rem; line-height: 1.6; }
+
 .material-detail-grid,
 .source-detail-grid {
   display: grid;
@@ -214,6 +257,7 @@
   .material-detail-grid,
   .source-detail-grid { grid-template-columns: 1fr; }
   .material-connections-column { position: static; }
+  .learning-profile-grid { grid-template-columns: repeat(2, minmax(0,1fr)); }
 }
 @media (max-width: 680px) {
   .material-browser-tools { grid-template-columns: 1fr; }
@@ -222,4 +266,5 @@
   .reference-section { grid-template-columns: 1fr; }
   .material-neighbor-nav { flex-direction: column; }
   .material-neighbor-nav a { max-width: 100%; }
+  .learning-profile-grid { grid-template-columns: 1fr; }
 }
