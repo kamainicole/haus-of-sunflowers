@@ -5,6 +5,7 @@ import "./contrast-fixes.css";
 import "./archive-atmosphere.css";
 import "./archive-cinematic.css";
 import "./archive-visibility-fix.css";
+import "./sanctuary-botanicals.css";
 
 export const metadata: Metadata = {
   title: "Haus of Sunflowers Research Archive",
