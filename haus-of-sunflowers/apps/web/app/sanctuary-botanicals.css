@@ -1,0 +1,326 @@
+/* Haus of Sunflowers — sanctuary visual layer
+   Real botanical artwork + slow atmospheric motion.
+   Public-domain assets:
+   - Sunflower Vintage Clipart, Karen Arnold, CC0 Public Domain Pictures
+   - Leaves Botanical Vintage Clipart, Karen Arnold, CC0 Public Domain Pictures
+*/
+
+:root {
+  --sanctuary-gold: #d1aa68;
+  --sanctuary-cream: #f4ead9;
+  --sanctuary-plum: #4b293c;
+  --sanctuary-moss: #59604a;
+  --sanctuary-black: #0c080a;
+}
+
+.archive-atmosphere-scene {
+  position: fixed;
+  inset: 0;
+  z-index: -2;
+  overflow: hidden;
+  pointer-events: none;
+  background:
+    radial-gradient(circle at 77% 18%, rgba(210, 170, 104, 0.12), transparent 22rem),
+    radial-gradient(circle at 14% 82%, rgba(89, 96, 74, 0.16), transparent 30rem),
+    linear-gradient(135deg, rgba(76, 40, 59, 0.2), transparent 44%),
+    linear-gradient(180deg, #110b0e 0%, #0b0709 58%, #080507 100%);
+}
+
+.archive-veil {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(90deg, rgba(6, 4, 5, 0.7) 0%, rgba(6, 4, 5, 0.1) 28%, rgba(6, 4, 5, 0.08) 72%, rgba(6, 4, 5, 0.65) 100%),
+    radial-gradient(ellipse at center, transparent 22%, rgba(6, 4, 5, 0.56) 100%);
+  backdrop-filter: blur(0.2px);
+}
+
+.archive-botanical-layer {
+  position: absolute;
+  background-repeat: no-repeat;
+  background-size: contain;
+  background-position: center;
+  will-change: transform, opacity, filter;
+  transform-origin: 50% 100%;
+}
+
+.botanical-leaves-left,
+.botanical-leaves-right {
+  width: min(34vw, 560px);
+  height: min(78vh, 900px);
+  bottom: -13vh;
+  background-image: url("https://www.publicdomainpictures.net/pictures/410000/velka/leaves-botanical-vintage-clipart.png");
+  filter: saturate(0.72) brightness(0.56) contrast(1.05) sepia(0.08) drop-shadow(0 30px 60px rgba(0,0,0,0.42));
+  opacity: 0.48;
+}
+
+.botanical-leaves-left {
+  left: -9vw;
+  animation: botanicalSwayLeft 18s ease-in-out infinite alternate;
+}
+
+.botanical-leaves-right {
+  right: -11vw;
+  transform: scaleX(-1) rotate(-4deg);
+  opacity: 0.36;
+  animation: botanicalSwayRight 22s ease-in-out infinite alternate;
+}
+
+.botanical-sunflower {
+  right: clamp(1rem, 5vw, 6rem);
+  top: 8vh;
+  width: clamp(230px, 24vw, 420px);
+  height: clamp(400px, 63vh, 760px);
+  background-image: url("https://www.publicdomainpictures.net/pictures/410000/velka/sunflower-vintage-clipart.png");
+  background-position: center top;
+  opacity: 0.48;
+  filter: saturate(0.86) brightness(0.72) sepia(0.05) drop-shadow(0 25px 42px rgba(0,0,0,0.46));
+  animation: sunflowerBreath 14s ease-in-out infinite alternate;
+}
+
+.botanical-sunflower-ghost {
+  left: 19vw;
+  top: -7vh;
+  width: clamp(150px, 17vw, 280px);
+  height: clamp(280px, 48vh, 560px);
+  background-image: url("https://www.publicdomainpictures.net/pictures/410000/velka/sunflower-vintage-clipart.png");
+  transform: scaleX(-1) rotate(-12deg);
+  opacity: 0.09;
+  filter: saturate(0.48) brightness(0.45) blur(0.4px);
+  animation: ghostDrift 24s ease-in-out infinite alternate;
+}
+
+.sanctuary-light {
+  position: absolute;
+  border-radius: 50%;
+  mix-blend-mode: screen;
+  filter: blur(16px);
+}
+
+.sanctuary-light-one {
+  width: 35rem;
+  height: 35rem;
+  right: -7rem;
+  top: -10rem;
+  background: radial-gradient(circle, rgba(221, 179, 103, 0.16), rgba(221, 179, 103, 0.03) 44%, transparent 70%);
+  animation: sanctuaryPulse 12s ease-in-out infinite alternate;
+}
+
+.sanctuary-light-two {
+  width: 28rem;
+  height: 28rem;
+  left: 22vw;
+  bottom: -12rem;
+  background: radial-gradient(circle, rgba(123, 83, 107, 0.12), rgba(89, 96, 74, 0.04) 48%, transparent 72%);
+  animation: sanctuaryPulse 17s ease-in-out infinite alternate-reverse;
+}
+
+.sanctuary-shadow {
+  position: absolute;
+  inset: auto 0 0 0;
+  height: 36vh;
+  background: linear-gradient(180deg, transparent, rgba(3, 2, 3, 0.78));
+}
+
+.sanctuary-candle-glow {
+  position: absolute;
+  width: 11rem;
+  height: 15rem;
+  border-radius: 50%;
+  background:
+    radial-gradient(ellipse at 50% 54%, rgba(244, 200, 120, 0.17), rgba(220, 143, 72, 0.06) 30%, transparent 68%);
+  filter: blur(10px);
+  opacity: 0.8;
+  animation: candleFlicker 4.8s ease-in-out infinite;
+}
+
+.candle-one {
+  left: 31vw;
+  bottom: 3vh;
+}
+
+.candle-two {
+  right: 25vw;
+  bottom: -1vh;
+  animation-delay: -2.3s;
+  transform: scale(0.7);
+}
+
+.archive-sunflower-halo {
+  opacity: 0.34;
+  filter: drop-shadow(0 0 16px rgba(209, 170, 104, 0.12));
+}
+
+.archive-mote {
+  box-shadow: 0 0 10px rgba(223, 188, 125, 0.22);
+  opacity: 0.34;
+}
+
+/* Bring interface surfaces into the same sanctuary world. */
+.product-sidebar,
+.product-topbar {
+  background:
+    linear-gradient(180deg, rgba(15, 10, 13, 0.92), rgba(10, 7, 9, 0.86)) !important;
+  backdrop-filter: blur(22px) saturate(1.1);
+  box-shadow: 18px 0 44px rgba(0, 0, 0, 0.22);
+}
+
+.product-content {
+  isolation: isolate;
+}
+
+.page-hero,
+.dashboard-product-hero {
+  background:
+    linear-gradient(120deg, rgba(21, 13, 18, 0.82), rgba(45, 26, 38, 0.58) 52%, rgba(18, 12, 15, 0.7)),
+    radial-gradient(circle at 78% 22%, rgba(215, 175, 107, 0.12), transparent 20rem) !important;
+  border: 1px solid rgba(220, 180, 112, 0.22) !important;
+  box-shadow:
+    0 24px 70px rgba(0,0,0,0.42),
+    inset 0 1px 0 rgba(255,255,255,0.03),
+    0 0 0 1px rgba(84, 47, 68, 0.16) !important;
+}
+
+.dashboard-product-hero::after {
+  content: "" !important;
+  position: absolute;
+  right: -2rem;
+  bottom: -8rem;
+  top: auto !important;
+  width: 20rem;
+  height: 32rem;
+  background: url("https://www.publicdomainpictures.net/pictures/410000/velka/sunflower-vintage-clipart.png") center/contain no-repeat;
+  opacity: 0.16;
+  filter: saturate(0.7) brightness(0.68);
+  transform: rotate(-7deg);
+  animation: heroBloom 17s ease-in-out infinite alternate;
+}
+
+.dashboard-feature-card,
+.stat-card,
+.dashboard-work-card,
+.archive-discovery,
+.discovery-path,
+.panel,
+.material-card,
+.source-card,
+.import-card,
+.formulary-card {
+  background:
+    linear-gradient(150deg, rgba(43, 27, 36, 0.66), rgba(16, 11, 14, 0.74)) !important;
+  border-color: rgba(210, 170, 104, 0.19) !important;
+  backdrop-filter: blur(18px) saturate(1.05) !important;
+  box-shadow:
+    0 18px 54px rgba(0,0,0,0.28),
+    inset 0 1px 0 rgba(255,255,255,0.025) !important;
+}
+
+.dashboard-feature-card::after,
+.stat-card::after,
+.dashboard-work-card::after {
+  background:
+    linear-gradient(115deg, rgba(255,255,255,0.045), transparent 26%, transparent 70%, rgba(209,170,104,0.03)) !important;
+}
+
+.primary-cta,
+.topbar-action {
+  box-shadow:
+    0 10px 30px rgba(0,0,0,0.25),
+    0 0 22px rgba(209,170,104,0.08);
+}
+
+.primary-cta:hover,
+.topbar-action:hover {
+  box-shadow:
+    0 14px 34px rgba(0,0,0,0.34),
+    0 0 32px rgba(209,170,104,0.14);
+}
+
+@keyframes botanicalSwayLeft {
+  0% { transform: rotate(-4deg) translate3d(-1.5%, 1%, 0) scale(1.02); }
+  50% { transform: rotate(-1deg) translate3d(0.5%, -0.5%, 0) scale(1.035); }
+  100% { transform: rotate(2deg) translate3d(1.7%, 0.8%, 0) scale(1.015); }
+}
+
+@keyframes botanicalSwayRight {
+  0% { transform: scaleX(-1) rotate(-8deg) translate3d(-1%, 1%, 0); }
+  100% { transform: scaleX(-1) rotate(-2deg) translate3d(1.5%, -1%, 0); }
+}
+
+@keyframes sunflowerBreath {
+  0% { transform: rotate(-2.2deg) translate3d(0, 0, 0) scale(0.99); opacity: 0.42; }
+  50% { transform: rotate(0.4deg) translate3d(-0.3rem, -0.45rem, 0) scale(1.015); opacity: 0.5; }
+  100% { transform: rotate(2.4deg) translate3d(0.45rem, 0.25rem, 0) scale(1.01); opacity: 0.46; }
+}
+
+@keyframes ghostDrift {
+  0% { transform: scaleX(-1) rotate(-14deg) translate3d(-1.2rem, 0, 0); }
+  100% { transform: scaleX(-1) rotate(-7deg) translate3d(1.2rem, 1.2rem, 0); }
+}
+
+@keyframes sanctuaryPulse {
+  0% { transform: scale(0.94); opacity: 0.58; }
+  100% { transform: scale(1.08); opacity: 1; }
+}
+
+@keyframes candleFlicker {
+  0%, 100% { transform: translateY(0) scale(0.94, 1.02); opacity: 0.5; }
+  22% { transform: translateY(-0.4rem) scale(1.04, 0.98); opacity: 0.76; }
+  48% { transform: translateY(0.2rem) scale(0.98, 1.06); opacity: 0.6; }
+  72% { transform: translateY(-0.15rem) scale(1.06, 0.95); opacity: 0.7; }
+}
+
+@keyframes heroBloom {
+  0% { transform: rotate(-9deg) translate3d(0, 0.8rem, 0) scale(0.97); }
+  100% { transform: rotate(-4deg) translate3d(-0.5rem, -0.5rem, 0) scale(1.02); }
+}
+
+@media (max-width: 1100px) {
+  .botanical-leaves-left,
+  .botanical-leaves-right {
+    width: 42vw;
+    opacity: 0.26;
+  }
+
+  .botanical-sunflower {
+    opacity: 0.31;
+    right: -5vw;
+  }
+}
+
+@media (max-width: 760px) {
+  .botanical-leaves-right,
+  .botanical-sunflower-ghost,
+  .candle-two {
+    display: none;
+  }
+
+  .botanical-leaves-left {
+    width: 58vw;
+    left: -22vw;
+    opacity: 0.24;
+  }
+
+  .botanical-sunflower {
+    width: 42vw;
+    right: -14vw;
+    top: 12vh;
+    opacity: 0.23;
+  }
+
+  .dashboard-product-hero::after {
+    width: 13rem;
+    height: 22rem;
+    right: -5rem;
+    opacity: 0.11;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .archive-botanical-layer,
+  .sanctuary-light,
+  .sanctuary-candle-glow,
+  .dashboard-product-hero::after {
+    animation: none !important;
+  }
+}
