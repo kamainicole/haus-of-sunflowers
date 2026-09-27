@@ -38,9 +38,31 @@ type SourceLink = {
   } | null;
 };
 
+const SOURCE_FALLBACK = "Not specified in The Rootworker's Formulary entry.";
+
 function splitPairings(value: string | null) {
   if (!value) return [];
-  return value.split(/,|;/).map((item) => item.trim()).filter(Boolean).slice(0, 12);
+  return value.split(/,|;/).map((item) => item.trim()).filter(Boolean).slice(0, 16);
+}
+
+function botanicalLabel(material: Material) {
+  if (material.botanical_name || material.scientific_name) {
+    return material.botanical_name || material.scientific_name || SOURCE_FALLBACK;
+  }
+
+  const nonBotanicalTypes = new Set([
+    "animal_curio",
+    "mineral",
+    "curio",
+    "water",
+    "household_material",
+  ]);
+
+  if (nonBotanicalTypes.has(material.material_type || "")) {
+    return "Not applicable to this material.";
+  }
+
+  return "Not specified in The Rootworker's Formulary.";
 }
 
 export default async function MaterialDetailPage({ params }: { params: Promise<{ id: string }> }) {
@@ -68,6 +90,7 @@ export default async function MaterialDetailPage({ params }: { params: Promise<{
 
   const sources = (sourceData ?? []) as unknown as SourceLink[];
   const pairings = splitPairings(material.pairings_summary);
+  const botanicalName = botanicalLabel(material);
 
   const { data: neighbors } = await supabase
     .schema("research")
@@ -94,9 +117,7 @@ export default async function MaterialDetailPage({ params }: { params: Promise<{
         <div>
           <div className="eyebrow">{(material.material_type || "material").replaceAll("_", " ")}</div>
           <h1>{material.common_name}</h1>
-          {(material.botanical_name || material.scientific_name) && (
-            <p className="material-latin">{material.botanical_name || material.scientific_name}</p>
-          )}
+          <p className="material-latin">{botanicalName}</p>
           <p className="material-lede">
             {material.formulary_notes || material.primary_conditions || "Formulary reference entry."}
           </p>
@@ -104,6 +125,7 @@ export default async function MaterialDetailPage({ params }: { params: Promise<{
         <aside className="material-identity-card">
           <span>Reference profile</span>
           <dl>
+            <div><dt>Botanical name</dt><dd>{botanicalName}</dd></div>
             <div><dt>Type</dt><dd>{(material.material_type || "Material").replaceAll("_", " ")}</dd></div>
             {material.material_subtype && <div><dt>Subtype</dt><dd>{material.material_subtype.replaceAll("_", " ")}</dd></div>}
             {material.part_used && <div><dt>Part used</dt><dd>{material.part_used}</dd></div>}
@@ -113,56 +135,68 @@ export default async function MaterialDetailPage({ params }: { params: Promise<{
       </section>
 
       <section className="reference-flow-strip" aria-label="Continue through the archive">
-        <div><small>1 · Read</small><strong>Formulary entry</strong></div>
+        <div><small>1 · Learn</small><strong>Read the full profile</strong></div>
         <span>→</span>
-        <div><small>2 · Connect</small><strong>Pairings + sources</strong></div>
+        <div><small>2 · Connect</small><strong>Compare pairings + sources</strong></div>
         <span>→</span>
-        <Link href={`/formulas?material=${encodeURIComponent(material.common_name)}`}><small>3 · Apply</small><strong>Formula Builder</strong></Link>
+        <Link href={`/formulas?material=${encodeURIComponent(material.common_name)}`}><small>3 · Apply</small><strong>Build with it</strong></Link>
+      </section>
+
+      <section className="material-learning-profile" aria-label="Core learning profile">
+        <div className="learning-profile-heading">
+          <div className="eyebrow">Core learning profile</div>
+          <h2>What to know about {material.common_name}</h2>
+          <p>Every material keeps the same learning anatomy so you can compare entries without guessing where information lives.</p>
+        </div>
+        <div className="learning-profile-grid">
+          <article><span>01</span><h3>Botanical name</h3><p>{botanicalName}</p></article>
+          <article><span>02</span><h3>Conditions</h3><p>{material.primary_conditions || SOURCE_FALLBACK}</p></article>
+          <article><span>03</span><h3>Roles</h3><p>{material.functional_roles_text || SOURCE_FALLBACK}</p></article>
+          <article><span>04</span><h3>Temperament</h3><p>{material.temperament_analysis || SOURCE_FALLBACK}</p></article>
+          <article><span>05</span><h3>Pairings</h3><p>{material.pairings_summary || SOURCE_FALLBACK}</p></article>
+          <article><span>06</span><h3>Correspondences</h3><p>{material.correspondences_summary || SOURCE_FALLBACK}</p></article>
+        </div>
       </section>
 
       <div className="material-detail-grid">
         <section className="material-reading-column">
-          {material.primary_conditions && (
-            <article className="reference-section">
-              <div className="reference-section-number">01</div>
-              <div><h2>Conditions</h2><p>{material.primary_conditions}</p></div>
-            </article>
-          )}
-          {material.functional_roles_text && (
-            <article className="reference-section">
-              <div className="reference-section-number">02</div>
-              <div><h2>Roles</h2><p>{material.functional_roles_text}</p></div>
-            </article>
-          )}
-          {material.temperament_analysis && (
-            <article className="reference-section">
-              <div className="reference-section-number">03</div>
-              <div><h2>Temperament</h2><p>{material.temperament_analysis}</p></div>
-            </article>
-          )}
+          <article className="reference-section">
+            <div className="reference-section-number">01</div>
+            <div><h2>Conditions</h2><p>{material.primary_conditions || SOURCE_FALLBACK}</p></div>
+          </article>
+          <article className="reference-section">
+            <div className="reference-section-number">02</div>
+            <div><h2>Roles</h2><p>{material.functional_roles_text || SOURCE_FALLBACK}</p></div>
+          </article>
+          <article className="reference-section">
+            <div className="reference-section-number">03</div>
+            <div><h2>Temperament</h2><p>{material.temperament_analysis || SOURCE_FALLBACK}</p></div>
+          </article>
+          <article className="reference-section">
+            <div className="reference-section-number">04</div>
+            <div><h2>Pairings</h2><p>{material.pairings_summary || SOURCE_FALLBACK}</p></div>
+          </article>
+          <article className="reference-section">
+            <div className="reference-section-number">05</div>
+            <div><h2>Correspondences</h2><p>{material.correspondences_summary || SOURCE_FALLBACK}</p></div>
+          </article>
           {material.traditional_associations && (
             <article className="reference-section">
-              <div className="reference-section-number">04</div>
+              <div className="reference-section-number">06</div>
               <div><h2>Traditional Associations</h2><p>{material.traditional_associations}</p></div>
-            </article>
-          )}
-          {material.correspondences_summary && (
-            <article className="reference-section">
-              <div className="reference-section-number">05</div>
-              <div><h2>Correspondences</h2><p>{material.correspondences_summary}</p></div>
             </article>
           )}
           {material.formulary_notes && (
             <article className="reference-section reference-notes">
-              <div className="reference-section-number">06</div>
+              <div className="reference-section-number">07</div>
               <div><h2>Formulary Notes</h2><p>{material.formulary_notes}</p></div>
             </article>
           )}
           {material.formulation_behavior && (
-            <article className="reference-section"><div className="reference-section-number">07</div><div><h2>Behavior in Formulation</h2><p>{material.formulation_behavior}</p></div></article>
+            <article className="reference-section"><div className="reference-section-number">08</div><div><h2>Behavior in Formulation</h2><p>{material.formulation_behavior}</p></div></article>
           )}
           {material.preparation_notes && (
-            <article className="reference-section"><div className="reference-section-number">08</div><div><h2>Preparation</h2><p>{material.preparation_notes}</p></div></article>
+            <article className="reference-section"><div className="reference-section-number">09</div><div><h2>Preparation</h2><p>{material.preparation_notes}</p></div></article>
           )}
           {material.safety_notes && (
             <article className="reference-section caution-section"><div className="reference-section-number">!</div><div><h2>Safety Notes</h2><p>{material.safety_notes}</p></div></article>
@@ -179,7 +213,7 @@ export default async function MaterialDetailPage({ params }: { params: Promise<{
                   <Link href={`/materials?q=${encodeURIComponent(pairing)}`} key={pairing}>{pairing} →</Link>
                 ))}
               </div>
-            ) : <p>No pairing notes are attached yet.</p>}
+            ) : <p>{SOURCE_FALLBACK}</p>}
           </section>
 
           <section className="connection-panel">
