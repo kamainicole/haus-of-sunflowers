@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { redirect } from "next/navigation";
 import { AppShell } from "@/components/AppShell";
 import { createClient } from "@/lib/supabase/server";
@@ -34,13 +35,16 @@ export default async function SourcesPage() {
 
   return (
     <AppShell>
+      <nav className="flow-breadcrumbs" aria-label="Breadcrumb">
+        <Link href="/dashboard">Archive</Link><span>→</span><strong>Sources</strong>
+      </nav>
+
       <section className="page-hero compact-hero">
         <div>
           <div className="eyebrow">Provenance first</div>
           <h1>Sources</h1>
           <p>
-            The book, archival records, scholarship, interviews, and historical collections
-            supporting every structured record.
+            Open a source to see what records connect back to it, including materials and page-level provenance.
           </p>
         </div>
       </section>
@@ -52,14 +56,17 @@ export default async function SourcesPage() {
             <p>Import the book first, then historical sources can be attached as the deeper research layer.</p>
           </div>
         ) : sources.map((source) => (
-          <article className="source-row" key={source.id}>
+          <Link className="source-row source-row-link" href={`/sources/${source.id}`} key={source.id}>
             <div>
               <div className="eyebrow">{source.source_type.replaceAll("_", " ")}</div>
               <h3>{source.title}</h3>
               <p>{[source.author, source.publication_year].filter(Boolean).join(" · ")}</p>
             </div>
-            <span className="record-pill">{(source.content_origin || "unclassified").replaceAll("_", " ")}</span>
-          </article>
+            <div className="source-open-meta">
+              <span className="record-pill">{(source.content_origin || "unclassified").replaceAll("_", " ")}</span>
+              <span>Open source →</span>
+            </div>
+          </Link>
         ))}
       </section>
     </AppShell>
