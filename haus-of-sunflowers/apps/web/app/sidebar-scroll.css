@@ -1,0 +1,46 @@
+/* Keep the archive navigation usable on shorter screens.
+   The sidebar is viewport-height on desktop, so it needs its own scroll container. */
+
+@media (min-width: 981px) {
+  .product-sidebar {
+    overflow-y: auto !important;
+    overflow-x: hidden;
+    overscroll-behavior: contain;
+    scrollbar-gutter: stable;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(197, 154, 88, 0.56) rgba(16, 12, 14, 0.38);
+  }
+
+  .product-sidebar::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  .product-sidebar::-webkit-scrollbar-track {
+    background: rgba(16, 12, 14, 0.38);
+  }
+
+  .product-sidebar::-webkit-scrollbar-thumb {
+    background: linear-gradient(180deg, rgba(209, 170, 104, 0.72), rgba(123, 70, 83, 0.72));
+    border: 2px solid rgba(16, 12, 14, 0.72);
+    border-radius: 999px;
+  }
+
+  .product-sidebar::-webkit-scrollbar-thumb:hover {
+    background: rgba(209, 170, 104, 0.82);
+  }
+
+  .product-brand {
+    flex-shrink: 0;
+  }
+
+  .product-nav,
+  .sidebar-section-label,
+  .sidebar-book-card,
+  .sidebar-footer {
+    flex-shrink: 0;
+  }
+
+  .sidebar-footer {
+    padding-bottom: 6px;
+  }
+}
