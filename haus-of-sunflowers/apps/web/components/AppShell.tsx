@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import type { ReactNode } from "react";
+import { ArchiveAtmosphere } from "@/components/ArchiveAtmosphere";
 
 const NAV = [
   { href: "/dashboard", label: "Dashboard", glyph: "⌂" },
@@ -26,6 +27,8 @@ export function AppShell({ children, isOwner = false }: { children: ReactNode; i
 
   return (
     <main className="product-shell">
+      <ArchiveAtmosphere />
+
       <aside className="product-sidebar">
         <Link className="product-brand" href="/dashboard">
           <div className="product-brand-seal" aria-hidden="true">
@@ -87,7 +90,10 @@ export function AppShell({ children, isOwner = false }: { children: ReactNode; i
           )}
         </header>
 
-        <div className="product-content">{children}</div>
+        <div className="product-content">
+          <div className="content-light" aria-hidden="true" />
+          {children}
+        </div>
       </section>
     </main>
   );
