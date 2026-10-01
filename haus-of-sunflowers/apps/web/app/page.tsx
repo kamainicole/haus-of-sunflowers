@@ -1,20 +1,15 @@
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
+import { requireOwner } from "@/lib/auth/isOwner";
 
 export default async function HomePage() {
-  const hasSupabaseConfig = Boolean(
-    process.env.NEXT_PUBLIC_SUPABASE_URL &&
-      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
-  );
-
-  if (!hasSupabaseConfig) {
-    redirect("/login");
-  }
-
   const supabase = createClient();
   const {
     data: { user },
   } = await supabase.auth.getUser();
 
-  redirect(user ? "/dashboard" : "/login");
+  if (!user) redirect("/login");
+
+  const ownerState = await requireOwner();
+  redirect(ownerState.isOwner ? "/admin" : "/dashboard");
 }
