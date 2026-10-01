@@ -1,18 +1,18 @@
 import { createServerClient, type CookieOptions } from "@supabase/ssr";
 import { cookies } from "next/headers";
+import { SUPABASE_PUBLISHABLE_KEY, SUPABASE_URL } from "@/lib/supabase/config";
 
 /**
  * Server-side Supabase client for Server Components, Server Actions,
- * and Route Handlers. Still uses the anon key + the signed-in user's
- * session — NOT the service role key. This client is still fully
- * subject to RLS; it just runs on the server instead of the browser.
+ * and Route Handlers. Uses the public publishable key + signed-in session,
+ * so all access remains subject to Row Level Security.
  */
 export function createClient() {
   const cookieStore = cookies();
 
   return createServerClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    SUPABASE_URL,
+    SUPABASE_PUBLISHABLE_KEY,
     {
       cookies: {
         get(name: string) {
@@ -22,16 +22,14 @@ export function createClient() {
           try {
             cookieStore.set({ name, value, ...options });
           } catch {
-            // Called from a Server Component with no request context to
-            // mutate — safe to ignore because middleware refreshes the
-            // session on every request anyway.
+            // Called from a Server Component with no request context to mutate.
           }
         },
         remove(name: string, options: CookieOptions) {
           try {
             cookieStore.set({ name, value: "", ...options });
           } catch {
-            // See note above.
+            // Called from a Server Component with no request context to mutate.
           }
         },
       },
