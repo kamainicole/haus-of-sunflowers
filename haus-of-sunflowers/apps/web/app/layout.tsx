@@ -8,10 +8,11 @@ import "./archive-visibility-fix.css";
 import "./sanctuary-botanicals.css";
 import "./sidebar-scroll.css";
 import "./archive-flows.css";
+import "./hub-pathways.css";
 
 export const metadata: Metadata = {
-  title: "Haus of Sunflowers Research Archive",
-  description: "Private scholarly research environment",
+  title: "Haus of Sunflowers",
+  description: "Research, self-technologies, education, formulation, and services",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
