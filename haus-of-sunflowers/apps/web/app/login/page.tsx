@@ -3,35 +3,34 @@
 import { useState } from "react";
 import { createClient } from "@/lib/supabase/client";
 
-type LoginStatus = "idle" | "sent" | "error" | "preview";
+type LoginStatus = "idle" | "sent" | "error";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [status, setStatus] = useState<LoginStatus>("idle");
-
-  const hasSupabaseConfig = Boolean(
-    process.env.NEXT_PUBLIC_SUPABASE_URL &&
-      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
-  );
+  const [errorMessage, setErrorMessage] = useState("");
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setStatus("idle");
-
-    if (!hasSupabaseConfig) {
-      setStatus("preview");
-      return;
-    }
+    setErrorMessage("");
 
     const supabase = createClient();
     const { error } = await supabase.auth.signInWithOtp({
-      email,
+      email: email.trim(),
       options: {
         emailRedirectTo: `${window.location.origin}/auth/callback`,
+        shouldCreateUser: false,
       },
     });
 
-    setStatus(error ? "error" : "sent");
+    if (error) {
+      setStatus("error");
+      setErrorMessage(error.message || "Unable to send the secure sign-in link.");
+      return;
+    }
+
+    setStatus("sent");
   }
 
   return (
@@ -62,11 +61,9 @@ export default function LoginPage() {
         </div>
 
         <div className="login-card">
-          <div className="eyebrow">Private archive access</div>
+          <div className="eyebrow">Secure access</div>
           <h1>Welcome back</h1>
-          <p>
-            Enter your email and we’ll send a secure sign-in link. No password is required.
-          </p>
+          <p>Enter the email already attached to your Haus of Sunflowers account. We’ll send a secure sign-in link.</p>
 
           <form onSubmit={handleSubmit}>
             <label className="field-label" htmlFor="email">Email address</label>
@@ -83,16 +80,9 @@ export default function LoginPage() {
             <button className="primary-button" type="submit">Send secure sign-in link</button>
           </form>
 
-          {status === "sent" && (
-            <p className="status-message">Check your email for your sign-in link.</p>
-          )}
+          {status === "sent" && <p className="status-message">Check your email for your secure sign-in link.</p>}
           {status === "error" && (
-            <p className="status-message error">Something went wrong. Please try again.</p>
-          )}
-          {status === "preview" && (
-            <p className="status-message">
-              This preview does not have Supabase environment variables attached. The branded interface is available for review, but sign-in only works on the configured production deployment.
-            </p>
+            <p className="status-message error">{errorMessage}</p>
           )}
         </div>
       </section>
