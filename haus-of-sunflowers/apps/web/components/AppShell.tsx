@@ -2,8 +2,9 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import type { ReactNode } from "react";
+import { useEffect, useState, type ReactNode } from "react";
 import { ArchiveAtmosphere } from "@/components/ArchiveAtmosphere";
+import { createClient } from "@/lib/supabase/client";
 
 type NavItem = { href: string; label: string; glyph: string };
 type NavGroup = { label: string; href?: string; items: NavItem[] };
@@ -54,12 +55,36 @@ const NAV_GROUPS: NavGroup[] = [
 ];
 
 const OWNER_NAV = [
+  { href: "/admin", label: "Owner Dashboard", glyph: "◆" },
   { href: "/import-center", label: "Import Center", glyph: "⇧" },
   { href: "/dissertation", label: "Dissertation", glyph: "□" },
 ];
 
 export function AppShell({ children, isOwner = false }: { children: ReactNode; isOwner?: boolean }) {
   const pathname = usePathname();
+  const [detectedOwner, setDetectedOwner] = useState(isOwner);
+  const ownerMode = isOwner || detectedOwner;
+
+  useEffect(() => {
+    if (isOwner) {
+      setDetectedOwner(true);
+      return;
+    }
+
+    let cancelled = false;
+    const supabase = createClient();
+
+    async function detectOwner() {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user || cancelled) return;
+
+      const { data, error } = await supabase.schema("research").rpc("am_i_owner");
+      if (!cancelled && !error && data === true) setDetectedOwner(true);
+    }
+
+    void detectOwner();
+    return () => { cancelled = true; };
+  }, [isOwner]);
 
   const isActive = (href: string) =>
     pathname === href || (href !== "/dashboard" && pathname?.startsWith(href + "/"));
@@ -102,7 +127,7 @@ export function AppShell({ children, isOwner = false }: { children: ReactNode; i
             </section>
           ))}
 
-          {isOwner && (
+          {ownerMode && (
             <section className="nav-group owner-nav-group">
               <div className="sidebar-section-label nav-group-label">Private workspace</div>
               {OWNER_NAV.map((item) => (
@@ -127,7 +152,7 @@ export function AppShell({ children, isOwner = false }: { children: ReactNode; i
 
         <div className="sidebar-footer">
           <span className="status-dot" />
-          {isOwner ? "Private owner workspace" : "Haus of Sunflowers hub"}
+          {ownerMode ? "Private owner workspace" : "Haus of Sunflowers hub"}
         </div>
       </aside>
 
@@ -137,8 +162,8 @@ export function AppShell({ children, isOwner = false }: { children: ReactNode; i
             <div className="topbar-kicker">Haus of Sunflowers</div>
             <div className="topbar-title">Spirituality, self-technologies, research, and psychology-informed education without collapsing the boundaries between them.</div>
           </div>
-          {isOwner ? (
-            <Link href="/import-center" className="topbar-action"><span aria-hidden="true">＋</span>Bring in a Source</Link>
+          {ownerMode ? (
+            <Link href="/admin" className="topbar-action"><span aria-hidden="true">◆</span>Owner Dashboard</Link>
           ) : (
             <span className="archive-stars" aria-hidden="true">✦ ✧ ✦</span>
           )}
