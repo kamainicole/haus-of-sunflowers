@@ -10,6 +10,8 @@ export default function ResetPasswordPage() {
   const supabase = useMemo(() => createClient(), []);
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [status, setStatus] = useState<Status>("checking");
   const [message, setMessage] = useState("Verifying your password-reset link…");
 
@@ -132,30 +134,50 @@ export default function ResetPasswordPage() {
           {formReady && (
             <form onSubmit={handleSubmit}>
               <label className="field-label" htmlFor="new-password">New password</label>
-              <input
-                id="new-password"
-                className="field"
-                type="password"
-                autoComplete="new-password"
-                minLength={8}
-                required
-                value={password}
-                onChange={(event) => setPassword(event.target.value)}
-              />
+              <div className="password-field-wrap">
+                <input
+                  id="new-password"
+                  className="field password-field"
+                  type={showPassword ? "text" : "password"}
+                  autoComplete="new-password"
+                  minLength={8}
+                  required
+                  value={password}
+                  onChange={(event) => setPassword(event.target.value)}
+                />
+                <button
+                  type="button"
+                  className="password-toggle"
+                  onClick={() => setShowPassword((visible) => !visible)}
+                  aria-label={showPassword ? "Hide password" : "Show password"}
+                >
+                  <span aria-hidden="true">👁</span> {showPassword ? "Hide" : "Show"}
+                </button>
+              </div>
 
               <label className="field-label" htmlFor="confirm-password" style={{ marginTop: 16 }}>
                 Confirm password
               </label>
-              <input
-                id="confirm-password"
-                className="field"
-                type="password"
-                autoComplete="new-password"
-                minLength={8}
-                required
-                value={confirmPassword}
-                onChange={(event) => setConfirmPassword(event.target.value)}
-              />
+              <div className="password-field-wrap">
+                <input
+                  id="confirm-password"
+                  className="field password-field"
+                  type={showConfirmPassword ? "text" : "password"}
+                  autoComplete="new-password"
+                  minLength={8}
+                  required
+                  value={confirmPassword}
+                  onChange={(event) => setConfirmPassword(event.target.value)}
+                />
+                <button
+                  type="button"
+                  className="password-toggle"
+                  onClick={() => setShowConfirmPassword((visible) => !visible)}
+                  aria-label={showConfirmPassword ? "Hide password" : "Show password"}
+                >
+                  <span aria-hidden="true">👁</span> {showConfirmPassword ? "Hide" : "Show"}
+                </button>
+              </div>
 
               <button className="primary-button" type="submit" disabled={status === "loading"}>
                 {status === "loading" ? "Saving…" : "Save password and enter app"}
