@@ -26,6 +26,7 @@ const NAV_GROUPS: NavGroup[] = [
       { href: "/formulary", label: "The Formulary", glyph: "✦" },
       { href: "/materials", label: "Materials", glyph: "◌" },
       { href: "/formulas", label: "Formula Builder", glyph: "◇" },
+      { href: "/formulation-classroom", label: "Formulation Classroom", glyph: "▧" },
     ],
   },
   {
