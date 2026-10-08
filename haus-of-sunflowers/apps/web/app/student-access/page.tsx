@@ -4,53 +4,97 @@ import Link from "next/link";
 import { useState } from "react";
 import { createClient } from "@/lib/supabase/client";
 
-type AccessStatus = "idle" | "sent" | "error";
+type Mode = "signin" | "create";
+type AccessStatus = "idle" | "loading" | "sent" | "error";
 
 export default function StudentAccessPage() {
+  const [mode, setMode] = useState<Mode>("signin");
   const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [status, setStatus] = useState<AccessStatus>("idle");
   const [message, setMessage] = useState("");
 
+  async function checkAllowed(cleanEmail: string) {
+    const supabase = createClient();
+    const { data: allowed, error } = await supabase
+      .schema("api")
+      .rpc("student_access_allowed", { p_email: cleanEmail });
+
+    if (error) throw error;
+    return Boolean(allowed);
+  }
+
   async function handleSubmit(event: React.FormEvent) {
     event.preventDefault();
-    setStatus("idle");
+    setStatus("loading");
     setMessage("");
 
     const cleanEmail = email.trim().toLowerCase();
     const supabase = createClient();
 
-    const { data: allowed, error: accessError } = await supabase
-      .schema("api")
-      .rpc("student_access_allowed", { p_email: cleanEmail });
+    try {
+      const allowed = await checkAllowed(cleanEmail);
 
-    if (accessError) {
+      if (!allowed) {
+        setStatus("error");
+        setMessage("This email has not been added for student access.");
+        return;
+      }
+
+      if (mode === "signin") {
+        const { error } = await supabase.auth.signInWithPassword({
+          email: cleanEmail,
+          password,
+        });
+
+        if (error) {
+          setStatus("error");
+          setMessage(
+            error.message === "Invalid login credentials"
+              ? "The email or password is incorrect. If this is your first visit, choose Create student account."
+              : error.message || "Unable to sign in."
+          );
+          return;
+        }
+
+        window.location.replace("/dashboard");
+        return;
+      }
+
+      const { data, error } = await supabase.auth.signUp({
+        email: cleanEmail,
+        password,
+        options: {
+          emailRedirectTo: `${window.location.origin}/auth/callback?next=/dashboard`,
+        },
+      });
+
+      if (error) {
+        setStatus("error");
+        setMessage(error.message || "Unable to create the student account.");
+        return;
+      }
+
+      if (data.session) {
+        window.location.replace("/dashboard");
+        return;
+      }
+
+      setStatus("sent");
+      setMessage(
+        "Your student account was created. If email confirmation is required for this first setup, confirm it once. After that, future sign-ins use your password and go directly into the app."
+      );
+    } catch (error) {
       setStatus("error");
-      setMessage(accessError.message);
-      return;
+      setMessage(error instanceof Error ? error.message : "Unable to verify student access.");
     }
+  }
 
-    if (!allowed) {
-      setStatus("error");
-      setMessage("This email has not been added for student access.");
-      return;
-    }
-
-    const { error } = await supabase.auth.signInWithOtp({
-      email: cleanEmail,
-      options: {
-        emailRedirectTo: `${window.location.origin}/auth/callback`,
-        shouldCreateUser: true,
-      },
-    });
-
-    if (error) {
-      setStatus("error");
-      setMessage(error.message || "Unable to send the student sign-in link.");
-      return;
-    }
-
-    setStatus("sent");
-    setMessage("Check your email for your secure student sign-in link.");
+  function changeMode(nextMode: Mode) {
+    setMode(nextMode);
+    setStatus("idle");
+    setMessage("");
+    setPassword("");
   }
 
   return (
@@ -81,11 +125,29 @@ export default function StudentAccessPage() {
 
         <div className="login-card">
           <div className="eyebrow">Student access</div>
-          <h1>Enter the classroom hub</h1>
+          <h1>{mode === "signin" ? "Enter the classroom hub" : "Create your student account"}</h1>
           <p>
-            Use the email your instructor added for student access. Dissertation, source uploads,
-            and owner tools are not available to student accounts.
+            {mode === "signin"
+              ? "Use your approved student email and password. You will enter the app immediately after a successful sign-in."
+              : "Use the email your instructor approved, then create the password you will use for future sign-ins."}
           </p>
+
+          <div style={{ display: "flex", gap: 10, marginBottom: 20 }}>
+            <button
+              type="button"
+              className={mode === "signin" ? "primary-button" : "secondary-cta"}
+              onClick={() => changeMode("signin")}
+            >
+              Sign in
+            </button>
+            <button
+              type="button"
+              className={mode === "create" ? "primary-button" : "secondary-cta"}
+              onClick={() => changeMode("create")}
+            >
+              Create account
+            </button>
+          </div>
 
           <form onSubmit={handleSubmit}>
             <label className="field-label" htmlFor="student-email">Email address</label>
@@ -99,17 +161,44 @@ export default function StudentAccessPage() {
               onChange={(event) => setEmail(event.target.value)}
               placeholder="student@example.com"
             />
-            <button className="primary-button" type="submit">Send student sign-in link</button>
+
+            <label className="field-label" htmlFor="student-password" style={{ marginTop: 16 }}>
+              Password
+            </label>
+            <input
+              id="student-password"
+              className="field"
+              type="password"
+              autoComplete={mode === "signin" ? "current-password" : "new-password"}
+              minLength={8}
+              required
+              value={password}
+              onChange={(event) => setPassword(event.target.value)}
+            />
+
+            <button className="primary-button" type="submit" disabled={status === "loading"}>
+              {status === "loading"
+                ? "Please wait…"
+                : mode === "signin"
+                  ? "Sign in"
+                  : "Create student account"}
+            </button>
           </form>
 
-          {status !== "idle" && (
+          {status !== "idle" && status !== "loading" && (
             <p className={status === "error" ? "status-message error" : "status-message"}>
               {message}
             </p>
           )}
 
+          {mode === "signin" && (
+            <p style={{ marginTop: 18 }}>
+              <Link href="/forgot-password">Forgot your password?</Link>
+            </p>
+          )}
+
           <p style={{ marginTop: 18 }}>
-            Already have an owner or regular account? <Link href="/login">Use the regular sign-in page.</Link>
+            Owner or regular account? <Link href="/login">Use the regular sign-in page.</Link>
           </p>
         </div>
       </section>
