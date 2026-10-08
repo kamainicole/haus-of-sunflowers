@@ -1,15 +1,76 @@
 "use client";
 
-import { useState } from "react";
+import Link from "next/link";
+import { useEffect, useMemo, useState } from "react";
 import { createClient } from "@/lib/supabase/client";
 
-type Status = "idle" | "loading" | "error";
+type Status = "checking" | "ready" | "loading" | "error";
 
 export default function ResetPasswordPage() {
+  const supabase = useMemo(() => createClient(), []);
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [status, setStatus] = useState<Status>("idle");
-  const [message, setMessage] = useState("");
+  const [status, setStatus] = useState<Status>("checking");
+  const [message, setMessage] = useState("Verifying your password-reset link…");
+
+  useEffect(() => {
+    let cancelled = false;
+
+    async function establishRecoverySession() {
+      const url = new URL(window.location.href);
+      const code = url.searchParams.get("code");
+
+      if (code) {
+        const { error } = await supabase.auth.exchangeCodeForSession(code);
+
+        if (cancelled) return;
+
+        if (error) {
+          setStatus("error");
+          setMessage("This password-reset link is invalid or has expired. Request a new reset link.");
+          return;
+        }
+
+        window.history.replaceState({}, "", "/reset-password");
+        setStatus("ready");
+        setMessage("");
+        return;
+      }
+
+      const {
+        data: { session },
+      } = await supabase.auth.getSession();
+
+      if (cancelled) return;
+
+      if (session) {
+        setStatus("ready");
+        setMessage("");
+        return;
+      }
+
+      setStatus("error");
+      setMessage("This password-reset link is invalid or has expired. Request a new reset link.");
+    }
+
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((event, session) => {
+      if (cancelled) return;
+
+      if ((event === "PASSWORD_RECOVERY" || event === "SIGNED_IN") && session) {
+        setStatus("ready");
+        setMessage("");
+      }
+    });
+
+    void establishRecoverySession();
+
+    return () => {
+      cancelled = true;
+      subscription.unsubscribe();
+    };
+  }, [supabase]);
 
   async function handleSubmit(event: React.FormEvent) {
     event.preventDefault();
@@ -17,22 +78,21 @@ export default function ResetPasswordPage() {
     setMessage("");
 
     if (password.length < 8) {
-      setStatus("error");
+      setStatus("ready");
       setMessage("Use at least 8 characters.");
       return;
     }
 
     if (password !== confirmPassword) {
-      setStatus("error");
+      setStatus("ready");
       setMessage("The passwords do not match.");
       return;
     }
 
-    const supabase = createClient();
     const { error } = await supabase.auth.updateUser({ password });
 
     if (error) {
-      setStatus("error");
+      setStatus("ready");
       setMessage(error.message || "Unable to update your password.");
       return;
     }
@@ -40,6 +100,8 @@ export default function ResetPasswordPage() {
     const { data: isOwner } = await supabase.schema("research").rpc("am_i_owner");
     window.location.replace(isOwner === true ? "/admin" : "/dashboard");
   }
+
+  const formReady = status === "ready" || status === "loading";
 
   return (
     <main className="login-page">
@@ -54,45 +116,64 @@ export default function ResetPasswordPage() {
               </div>
             </div>
             <h2>Choose your password.</h2>
-            <p>Once it is saved, future sign-ins take you directly into the app without waiting for a sign-in email.</p>
+            <p>
+              The reset link opens this page, verifies the recovery session, and lets you choose
+              a new password. Once it is saved, future sign-ins take you directly into the app.
+            </p>
           </div>
         </div>
 
         <div className="login-card">
-          <div className="eyebrow">Password setup</div>
+          <div className="eyebrow">Password recovery</div>
           <h1>Create a new password</h1>
 
-          <form onSubmit={handleSubmit}>
-            <label className="field-label" htmlFor="new-password">New password</label>
-            <input
-              id="new-password"
-              className="field"
-              type="password"
-              autoComplete="new-password"
-              minLength={8}
-              required
-              value={password}
-              onChange={(event) => setPassword(event.target.value)}
-            />
+          {status === "checking" && <p className="status-message">{message}</p>}
 
-            <label className="field-label" htmlFor="confirm-password" style={{ marginTop: 16 }}>Confirm password</label>
-            <input
-              id="confirm-password"
-              className="field"
-              type="password"
-              autoComplete="new-password"
-              minLength={8}
-              required
-              value={confirmPassword}
-              onChange={(event) => setConfirmPassword(event.target.value)}
-            />
+          {formReady && (
+            <form onSubmit={handleSubmit}>
+              <label className="field-label" htmlFor="new-password">New password</label>
+              <input
+                id="new-password"
+                className="field"
+                type="password"
+                autoComplete="new-password"
+                minLength={8}
+                required
+                value={password}
+                onChange={(event) => setPassword(event.target.value)}
+              />
 
-            <button className="primary-button" type="submit" disabled={status === "loading"}>
-              {status === "loading" ? "Saving…" : "Save password and enter app"}
-            </button>
-          </form>
+              <label className="field-label" htmlFor="confirm-password" style={{ marginTop: 16 }}>
+                Confirm password
+              </label>
+              <input
+                id="confirm-password"
+                className="field"
+                type="password"
+                autoComplete="new-password"
+                minLength={8}
+                required
+                value={confirmPassword}
+                onChange={(event) => setConfirmPassword(event.target.value)}
+              />
 
-          {status === "error" && <p className="status-message error">{message}</p>}
+              <button className="primary-button" type="submit" disabled={status === "loading"}>
+                {status === "loading" ? "Saving…" : "Save password and enter app"}
+              </button>
+            </form>
+          )}
+
+          {message && status !== "checking" && (
+            <p className={status === "error" ? "status-message error" : "status-message"}>
+              {message}
+            </p>
+          )}
+
+          {status === "error" && (
+            <p style={{ marginTop: 18 }}>
+              <Link href="/forgot-password">Request a new password-reset link</Link>
+            </p>
+          )}
         </div>
       </section>
     </main>
