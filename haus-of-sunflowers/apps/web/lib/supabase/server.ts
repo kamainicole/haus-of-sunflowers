@@ -1,12 +1,11 @@
-import { createServerClient } from "@supabase/ssr";
+import { createServerClient, type CookieOptions } from "@supabase/ssr";
 import { cookies } from "next/headers";
 import { SUPABASE_PUBLISHABLE_KEY, SUPABASE_URL } from "@/lib/supabase/config";
 
 /**
- * Server-side Supabase client.
- * Session tokens live in cookies so authenticated users stay signed in
- * across page loads and browser visits until they sign out or the
- * refresh session is actually revoked/expired.
+ * Server-side Supabase client for Server Components, Server Actions,
+ * and Route Handlers. Uses cookie-backed sessions so signed-in users
+ * remain authenticated across page loads.
  */
 export function createClient() {
   const cookieStore = cookies();
@@ -16,17 +15,21 @@ export function createClient() {
     SUPABASE_PUBLISHABLE_KEY,
     {
       cookies: {
-        getAll() {
-          return cookieStore.getAll();
+        get(name: string) {
+          return cookieStore.get(name)?.value;
         },
-        setAll(cookiesToSet) {
+        set(name: string, value: string, options: CookieOptions) {
           try {
-            cookiesToSet.forEach(({ name, value, options }) => {
-              cookieStore.set(name, value, options);
-            });
+            cookieStore.set({ name, value, ...options });
           } catch {
-            // Server Components cannot always mutate cookies directly.
-            // Middleware refreshes and writes the session cookies for them.
+            // Middleware handles refresh-cookie writes for Server Components.
+          }
+        },
+        remove(name: string, options: CookieOptions) {
+          try {
+            cookieStore.set({ name, value: "", ...options });
+          } catch {
+            // Middleware handles refresh-cookie writes for Server Components.
           }
         },
       },
