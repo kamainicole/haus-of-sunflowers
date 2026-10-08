@@ -10,6 +10,7 @@ import "./sidebar-scroll.css";
 import "./archive-flows.css";
 import "./hub-pathways.css";
 import "./learning-assistants.css";
+import "./formulation-classroom.css";
 
 export const metadata: Metadata = {
   title: "Haus of Sunflowers",
