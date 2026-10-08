@@ -9,6 +9,7 @@ import "./sanctuary-botanicals.css";
 import "./sidebar-scroll.css";
 import "./archive-flows.css";
 import "./hub-pathways.css";
+import "./learning-assistants.css";
 
 export const metadata: Metadata = {
   title: "Haus of Sunflowers",
