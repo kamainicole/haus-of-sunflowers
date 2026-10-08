@@ -3,8 +3,6 @@ import { redirect } from "next/navigation";
 import { AppShell } from "@/components/AppShell";
 import { requireOwner } from "@/lib/auth/isOwner";
 
-export const dynamic = "force-dynamic";
-
 export default async function AdminPage() {
   const ownerState = await requireOwner();
   if (!ownerState.user) redirect("/login");
