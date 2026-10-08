@@ -1,36 +1,40 @@
 "use client";
 
+import Link from "next/link";
 import { useState } from "react";
 import { createClient } from "@/lib/supabase/client";
 
-type LoginStatus = "idle" | "sent" | "error";
+type LoginStatus = "idle" | "loading" | "error";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [status, setStatus] = useState<LoginStatus>("idle");
   const [errorMessage, setErrorMessage] = useState("");
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    setStatus("idle");
+    setStatus("loading");
     setErrorMessage("");
 
     const supabase = createClient();
-    const { error } = await supabase.auth.signInWithOtp({
-      email: email.trim(),
-      options: {
-        emailRedirectTo: `${window.location.origin}/auth/callback`,
-        shouldCreateUser: false,
-      },
+    const { error } = await supabase.auth.signInWithPassword({
+      email: email.trim().toLowerCase(),
+      password,
     });
 
     if (error) {
       setStatus("error");
-      setErrorMessage(error.message || "Unable to send the secure sign-in link.");
+      setErrorMessage(
+        error.message === "Invalid login credentials"
+          ? "The email or password is incorrect."
+          : error.message || "Unable to sign in."
+      );
       return;
     }
 
-    setStatus("sent");
+    const { data: isOwner } = await supabase.schema("research").rpc("am_i_owner");
+    window.location.replace(isOwner === true ? "/admin" : "/dashboard");
   }
 
   return (
@@ -63,7 +67,7 @@ export default function LoginPage() {
         <div className="login-card">
           <div className="eyebrow">Secure access</div>
           <h1>Welcome back</h1>
-          <p>Enter the email already attached to your Haus of Sunflowers account. We’ll send a secure sign-in link.</p>
+          <p>Sign in with your email and password. Successful sign-in takes you directly into the app.</p>
 
           <form onSubmit={handleSubmit}>
             <label className="field-label" htmlFor="email">Email address</label>
@@ -77,16 +81,33 @@ export default function LoginPage() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
             />
-            <button className="primary-button" type="submit">Send secure sign-in link</button>
+
+            <label className="field-label" htmlFor="password" style={{ marginTop: 16 }}>Password</label>
+            <input
+              id="password"
+              className="field"
+              type="password"
+              autoComplete="current-password"
+              required
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
+
+            <button className="primary-button" type="submit" disabled={status === "loading"}>
+              {status === "loading" ? "Signing in…" : "Sign in"}
+            </button>
           </form>
 
-          {status === "sent" && <p className="status-message">Check your email for your secure sign-in link.</p>}
           {status === "error" && (
             <p className="status-message error">{errorMessage}</p>
           )}
 
           <p style={{ marginTop: 18 }}>
-            Student? <a href="/student-access">Use Student Access.</a>
+            <Link href="/forgot-password">Forgot or need to set your password?</Link>
+          </p>
+
+          <p style={{ marginTop: 18 }}>
+            Student? <Link href="/student-access">Use Student Access.</Link>
           </p>
         </div>
       </section>
