@@ -30,6 +30,13 @@ export default async function AdminPage() {
 
       <section className="dashboard-work-grid">
         <article className="dashboard-work-card">
+          <div className="eyebrow">Access management</div>
+          <h2>Students</h2>
+          <p>Add existing students, remove access when needed, and keep owner-only areas off limits.</p>
+          <Link href="/admin/students">Manage students →</Link>
+        </article>
+
+        <article className="dashboard-work-card">
           <div className="eyebrow">Research management</div>
           <h2>Import Center</h2>
           <p>Upload sources, review proposed records, resolve duplicates, and promote approved archival evidence.</p>
