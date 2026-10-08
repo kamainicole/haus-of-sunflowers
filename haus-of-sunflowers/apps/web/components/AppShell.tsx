@@ -56,6 +56,7 @@ const NAV_GROUPS: NavGroup[] = [
 
 const OWNER_NAV = [
   { href: "/admin", label: "Owner Dashboard", glyph: "◆" },
+  { href: "/admin/students", label: "Students", glyph: "◎" },
   { href: "/import-center", label: "Import Center", glyph: "⇧" },
   { href: "/dissertation", label: "Dissertation", glyph: "□" },
 ];
