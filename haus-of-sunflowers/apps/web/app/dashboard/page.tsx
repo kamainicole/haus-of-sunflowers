@@ -5,6 +5,8 @@ import { createClient } from "@/lib/supabase/server";
 import { requireOwner } from "@/lib/auth/isOwner";
 import type { DashboardStats } from "@haus/shared-types";
 
+export const dynamic = "force-dynamic";
+
 const PRIMARY_STATS: Array<{ key: keyof DashboardStats; label: string; kicker: string }> = [
   { key: "total_materials", label: "Materials", kicker: "Formulary library" },
   { key: "total_sources", label: "Sources", kicker: "Book + archive" },
