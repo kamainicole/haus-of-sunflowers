@@ -4,8 +4,8 @@ import { SUPABASE_PUBLISHABLE_KEY, SUPABASE_URL } from "@/lib/supabase/config";
 
 /**
  * Server-side Supabase client for Server Components, Server Actions,
- * and Route Handlers. Uses cookie-backed sessions so signed-in users
- * remain authenticated across page loads.
+ * and Route Handlers. Uses the public publishable key + signed-in session,
+ * so all access remains subject to Row Level Security.
  */
 export function createClient() {
   const cookieStore = cookies();
@@ -22,14 +22,14 @@ export function createClient() {
           try {
             cookieStore.set({ name, value, ...options });
           } catch {
-            // Middleware handles refresh-cookie writes for Server Components.
+            // Called from a Server Component with no request context to mutate.
           }
         },
         remove(name: string, options: CookieOptions) {
           try {
             cookieStore.set({ name, value: "", ...options });
           } catch {
-            // Middleware handles refresh-cookie writes for Server Components.
+            // Called from a Server Component with no request context to mutate.
           }
         },
       },
