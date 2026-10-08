@@ -3,7 +3,7 @@ import { AppShell } from "@/components/AppShell";
 import { FormulationClassroom } from "@/components/FormulationClassroom";
 import { createClient } from "@/lib/supabase/server";
 
-export type ClassroomMaterial = {
+type ClassroomMaterial = {
   id: string;
   common_name: string;
   botanical_name: string | null;
