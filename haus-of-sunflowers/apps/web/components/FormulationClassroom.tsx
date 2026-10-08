@@ -1,7 +1,17 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import type { ClassroomMaterial } from "@/app/formulation-classroom/page";
+type ClassroomMaterial = {
+  id: string;
+  common_name: string;
+  botanical_name: string | null;
+  primary_conditions: string | null;
+  functional_roles_text: string | null;
+  temperament_analysis: string | null;
+  pairings_summary: string | null;
+  correspondences_summary: string | null;
+  formulation_behavior: string | null;
+};
 
 type SelectedMaterial = {
   id: string;
