@@ -32,7 +32,7 @@ export default function PracticePage() {
 
       <section className="pathway-card-grid two-up">
         <article className="pathway-card static-card"><span>01</span><h2>Practice Library</h2><p>Only practices intentionally added to the app will appear here. No outside material is auto-imported.</p><strong>Content opens as you publish it.</strong></article>
-        <article className="pathway-card static-card"><span>02</span><h2>Practice Builder</h2><p>An AI-assisted organizer will assemble approved self-technologies into a personal nonclinical routine using only material already inside the app.</p><strong>Nonclinical by design.</strong></article>
+        <a className="pathway-card" href="/assistants?tool=practice_builder"><span>02</span><h2>Practice Builder</h2><p>An AI-assisted organizer assembles approved self-technologies into a personal nonclinical routine using only material already inside the app.</p><strong>Open Practice Builder →</strong></a>
       </section>
 
       <section className="boundary-note"><strong>Boundary:</strong> the Practice Builder cannot diagnose, provide psychotherapy, create treatment plans, or invent practices that have not been approved and added to this app.</section>
