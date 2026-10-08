@@ -40,6 +40,7 @@ const NAV_GROUPS: NavGroup[] = [
     href: "/learn",
     items: [
       { href: "/learn", label: "Classroom", glyph: "▧" },
+      { href: "/assistants", label: "Learning Assistants", glyph: "✦" },
       { href: "/community", label: "Study Commons", glyph: "❈" },
     ],
   },
