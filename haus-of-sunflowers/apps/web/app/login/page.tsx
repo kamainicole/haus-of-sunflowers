@@ -84,6 +84,10 @@ export default function LoginPage() {
           {status === "error" && (
             <p className="status-message error">{errorMessage}</p>
           )}
+
+          <p style={{ marginTop: 18 }}>
+            Student? <a href="/student-access">Use Student Access.</a>
+          </p>
         </div>
       </section>
     </main>
