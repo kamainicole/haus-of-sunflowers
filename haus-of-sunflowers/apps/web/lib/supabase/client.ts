@@ -1,10 +1,19 @@
 import { createBrowserClient } from "@supabase/ssr";
 import { SUPABASE_PUBLISHABLE_KEY, SUPABASE_URL } from "@/lib/supabase/config";
 
+let browserClient: ReturnType<typeof createBrowserClient> | undefined;
+
 /**
- * Browser-side Supabase client. The publishable key is safe to ship to the
- * browser; Row Level Security still controls what signed-in users can access.
+ * Reuse one browser client so only one auth client is responsible for
+ * refreshing and persisting the signed-in session in this tab.
  */
 export function createClient() {
-  return createBrowserClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY);
+  if (!browserClient) {
+    browserClient = createBrowserClient(
+      SUPABASE_URL,
+      SUPABASE_PUBLISHABLE_KEY
+    );
+  }
+
+  return browserClient;
 }
