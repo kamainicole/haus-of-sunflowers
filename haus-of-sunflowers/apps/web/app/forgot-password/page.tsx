@@ -23,7 +23,11 @@ export default function ForgotPasswordPage() {
 
     if (error) {
       setStatus("error");
-      setMessage(error.message || "Unable to send the password reset email.");
+      setMessage(
+        error.message?.toLowerCase().includes("rate limit")
+          ? "Too many reset emails were requested in a short period. Please wait a few minutes, then try again."
+          : error.message || "Unable to send the password reset email."
+      );
       return;
     }
 
