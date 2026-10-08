@@ -15,6 +15,7 @@ export default function FormulatePage() {
         <Link className="pathway-card" href="/materials"><span>02</span><h2>Materia Library</h2><p>Search herbs, roots, resins, curios, carriers, and related materials by function, role, temperament, pairings, and correspondences.</p><strong>Browse materials →</strong></Link>
         <Link className="pathway-card" href="/formulas"><span>03</span><h2>Formula Builder</h2><p>Test your own formula against the structure and logic already established in the book.</p><strong>Build a formula →</strong></Link>
         <Link className="pathway-card" href="/assistants?tool=formulary_assistant"><span>04</span><h2>Formulary Assistant</h2><p>Ask about materia, roles, temperament, pairings, conditions, and formulation behavior using approved Formulary records only.</p><strong>Ask the Formulary →</strong></Link>
+        <Link className="pathway-card" href="/formulation-classroom"><span>05</span><h2>Formulation Classroom</h2><p>Complete structured assignments, assign every material a job, explain your reasoning, and check your work against Formulary logic.</p><strong>Enter the classroom →</strong></Link>
       </section>
 
       <section className="boundary-note"><strong>Boundary:</strong> formulation tools do not automatically feed personal consultation, psychology, or self-technology workflows.</section>
