@@ -9,6 +9,7 @@ type LoginStatus = "idle" | "loading" | "error";
 export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const [status, setStatus] = useState<LoginStatus>("idle");
   const [errorMessage, setErrorMessage] = useState("");
 
@@ -83,15 +84,25 @@ export default function LoginPage() {
             />
 
             <label className="field-label" htmlFor="password" style={{ marginTop: 16 }}>Password</label>
-            <input
-              id="password"
-              className="field"
-              type="password"
-              autoComplete="current-password"
-              required
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-            />
+            <div className="password-field-wrap">
+              <input
+                id="password"
+                className="field password-field"
+                type={showPassword ? "text" : "password"}
+                autoComplete="current-password"
+                required
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+              />
+              <button
+                type="button"
+                className="password-toggle"
+                onClick={() => setShowPassword((visible) => !visible)}
+                aria-label={showPassword ? "Hide password" : "Show password"}
+              >
+                <span aria-hidden="true">👁</span> {showPassword ? "Hide" : "Show"}
+              </button>
+            </div>
 
             <button className="primary-button" type="submit" disabled={status === "loading"}>
               {status === "loading" ? "Signing in…" : "Sign in"}
